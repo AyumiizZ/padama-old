@@ -1,9 +1,12 @@
 <template>
     <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
-        <v-btn @click="navigateTo({name: 'Home'})">
-            HOME
-        </v-btn>
+        <router-link to='/'>
+            <v-btn>
+HOME
+            </v-btn>
+            
+        </router-link>
       </div>
 
       <v-spacer></v-spacer>
@@ -16,10 +19,10 @@
         <span class="mr-2">Latest Release</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
-      <v-btn @click="navigateTo({name: 'Login'})">
+      <v-btn to='/login'>
         Login
       </v-btn>
-      <v-btn @click="navigateTo({name: 'Register'})">
+      <v-btn to='/register'>
         Sign-Up
       </v-btn>
     </v-app-bar>
@@ -28,9 +31,6 @@
 <script>
 export default {
     methods: {
-        navigateTo (route) {
-            this.$router.push(route)
-        }
     }
 }
 </script>

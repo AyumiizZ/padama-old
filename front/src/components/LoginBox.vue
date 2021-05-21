@@ -18,7 +18,7 @@
 <script>
 import AuthenticationService from "@/services/AuthenticationService";
 export default {
-  name: "RegisterBox",
+  name: "LoginBox",
   components: {},
   data() {
     return {
