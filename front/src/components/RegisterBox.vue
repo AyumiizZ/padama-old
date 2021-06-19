@@ -24,19 +24,21 @@ export default {
     return {
       email: "",
       password: "",
-      error:''
+      error: "",
     };
   },
   methods: {
     async register() {
       try {
-        await AuthenticationService.register({
+        const response = await AuthenticationService.register({
           email: this.email,
           password: this.password,
         });
-        this.error =  ''
+        this.error = "";
+        this.$store.dispatch("setToken", response.data.token);
+        this.$store.dispatch("setUser", response.data.user);
       } catch (err) {
-        this.error = err.response.data.error
+        this.error = err.response.data.error;
       }
     },
   },

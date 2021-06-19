@@ -3,7 +3,10 @@
     
     <Header></Header>
     <v-main>
-      <router-view />
+      <v-container fluid>
+        <router-view />
+      </v-container>
+      
     </v-main>
   </v-app>
 </template>

@@ -3,6 +3,8 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Register from "@/views/Register";
 import Login from "@/views/Login";
+import Search from "@/views/Search"
+import Patient from "@/views/Patient"
 
 Vue.use(VueRouter);
 
@@ -31,6 +33,16 @@ const routes = [
     name: "Login",
     component: Login,
   },
+  {
+    path: "/search",
+    name: "Search",
+    component: Search
+  },
+  {
+    path: "/patient",
+    name: "Patient",
+    component: Patient
+  }
 ];
 
 const router = new VueRouter({
