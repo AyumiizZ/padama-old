@@ -7,6 +7,9 @@
       <router-link to="/search">
         <v-btn> Search </v-btn>
       </router-link>
+      <router-link to="/patient">
+        <v-btn> Patient </v-btn>
+      </router-link>
     </div>
 
     <v-spacer></v-spacer>
