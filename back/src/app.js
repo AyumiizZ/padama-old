@@ -14,7 +14,7 @@ app.use('/static', express.static(path.join(__dirname, 'public')))
 
 require('./routes')(app)
 
-sequelize.sync()
+sequelize.sync({force: true})
     .then(() => {
         app.listen(config.port || 8081)
     })

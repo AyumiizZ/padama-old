@@ -23,6 +23,7 @@
                   <v-col cols="auto">
                     <v-text-field
                       label="From"
+                      readonly
                       :value="inputValue.start"
                       v-on="inputEvents.start"
                     ></v-text-field>
@@ -33,6 +34,7 @@
                   <v-col cols="auto">
                     <v-text-field
                       label="To"
+                      readonly
                       :value="inputValue.end"
                       v-on="inputEvents.end"
                     ></v-text-field>
@@ -78,53 +80,15 @@
             <td>{{ row.item.last }}</td>
             <td>{{ row.item.age }}</td>
             <td>
-              <v-dialog v-model="dialog" width="500">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on">
-                    Click Me
-                  </v-btn>
-                </template>
-
-                <v-card>
-                  <video-player :options="videoOptions"></video-player>
-                  <v-card-title class="text-h5 grey lighten-2">
-                    Vedio List
-                  </v-card-title>
-
-                  <v-card-text>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    Duis aute irure dolor in reprehenderit in voluptate velit
-                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-                    occaecat cupidatat non proident, sunt in culpa qui officia
-                    deserunt mollit anim id est laborum.
-                  </v-card-text>
-                  <v-list dense>
-                    <v-subheader>REPORTS</v-subheader>
-                    <v-list-item-group color="primary">
-                      <v-list-item v-for="(it, i) in row.item.vdo" :key="i">
-                        <v-list-item-icon>
-                          <v-icon>mdi-video</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-content>
-                          <v-list-item-title v-text="it"></v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-list-item-group>
-                  </v-list>
-
-                  <v-divider></v-divider>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="dialog = false">
-                      I accept
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
+              <router-link :to="{ name: 'PDF', params : {_id: row.item._id}}">
+                <v-btn>Show PDF</v-btn>
+              </router-link>
+              <router-link :to="{ name: 'VDO', params : {_id: row.item._id}}">
+                <v-btn >Show Video</v-btn>
+              </router-link>
+              <router-link :to="{ name: 'Pic', params : {_id: row.item._id}}">
+                <v-btn>Show Picture</v-btn>
+              </router-link>
             </td>
           </tr>
         </template>
@@ -134,33 +98,13 @@
 </template>
 
 <script>
-import VideoPlayer from "@/components/VideoPlayer.vue";
-import "video.js/dist/video-js.css";
 export default {
-  components: { VideoPlayer },
+  // components: { VideoPlayer },
   data() {
     return {
-      videoOptions: {
-        autoplay: true,
-        controls: true,
-        responsive: true,
-        breakpoints: {
-  tiny: 300,
-  xsmall: 400,
-  small: 500,
-  medium: 600,
-  large: 700,
-  xlarge: 800,
-  huge: 900
-},
-        sources: [
-          {
-            src: "http://localhost:8081/static/video.mp4",
-            // src: "//home/ayumiizz/med/padama/front/dist/vdo/video.mp4",
-            type: "video/mp4",
-          },
-        ],
-      },
+      expanded: [],
+      singleExpand: false,
+      
       dialog: false,
       RegistrationNo: null,
       date: new Date(),
@@ -185,6 +129,7 @@ export default {
           text: "Age",
           value: "age",
         },
+        { text: '', value: 'attach' },
       ],
       queryResults: [
         {

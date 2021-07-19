@@ -8,16 +8,9 @@ module.exports = {
             password: Joi.string()
             .pattern(new RegExp('^[a-zA-Z0-9@]{8,32}$'))
         })
-        // const schema = {
-        //     email: Joi.string().email(),
-        //     password: Joi.string().regex(
-        //         new RegExp('^[a-zA-Z0-9@]{8,32}$')
-        //     )
-        // }
 
         try {
             const value = await schema.validateAsync(req.body)
-            // res.send(value)
             next()
         }
         catch (err) {

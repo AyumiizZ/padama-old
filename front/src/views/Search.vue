@@ -58,40 +58,176 @@
       </v-list-item>
     </v-card>
     <v-card>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title class="headline">
-            Queries History
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list-item>
+      <v-card-title>
+        Queries History
+        <v-spacer></v-spacer>
+        <v-dialog v-model="EnableDialog" width="500" v-if="!adminMode">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="mx-2"
+              fab
+              dark
+              color="blue lighten-2"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon dark> mdi-account-cog </v-icon>
+            </v-btn>
+
+          </template>
+
+          <v-card>
+            <v-card-title class="text-h5 grey lighten-2">
+              Enable admin mode
+            </v-card-title>
+
+            <v-card-text>
+              After turn on admin mode you can
+              <li>Edit user data</li>
+              <li>Permanent deleted user data</li>
+              Once you delete a user, there is no going back. Please be certain.
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-btn color="primary" text @click="EnableDialog = false">
+                Cancel
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="red lighten-1"
+                text
+                @click="
+                  EnableDialog = false;
+                  adminMode = true;
+                "
+              >
+                Enable
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="DisbaleDialog" width="500" v-if="adminMode">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="mx-2"
+              fab
+              dark
+              color="red lighten-2"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon dark> mdi-cancel </v-icon>
+            </v-btn>
+          </template>
+
+          <v-card>
+            <v-card-title class="text-h5 grey lighten-2">
+              Disable admin mode
+            </v-card-title>
+
+            <v-card-text>
+              After turn off admin mode you can not
+              <li>Edit user data</li>
+              <li>Permanent deleted user data</li>
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-btn color="red lighten-1" text @click="DisbaleDialog = false">
+                Cancel
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                color=" primary"
+                text
+                @click="
+                  DisbaleDialog = false;
+                  adminMode = false;
+                "
+              >
+                Disable
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="AddPatientDialog" width="500">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="mx-2"
+              fab
+              dark
+              color="blue lighten-2"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon dark> mdi-account-plus </v-icon>
+            </v-btn>
+          </template>
+
+          <v-card>
+            <v-card-title class="text-h5 grey lighten-2">
+              Disable admin mode
+            </v-card-title>
+
+            <v-card-text>
+              After turn off admin mode you can not
+              <li>Edit user data</li>
+              <li>Permanent deleted user data</li>
+            </v-card-text>
+
+            <v-divider></v-divider>
+
+            <v-card-actions>
+              <v-btn color="red lighten-1" text @click="AddPatientDialog = false">
+                Cancel
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-btn
+                color=" primary"
+                text
+                @click="
+                  AddPatientDialog = false;
+                  userAdd();
+                "
+              >
+                Add user
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-card-title>
+
+      <v-divider></v-divider>
       <v-data-table
         :headers="headers"
         :items="queryResults"
         multi-sort
         class="elevation-1"
       >
-      <template v-slot:item="row">
-        <tr>
-            <td>{{row.item._id}}</td>
-            <td>{{row.item.first}}</td>
-            <td>{{row.item.last}}</td>
-            <td>{{row.item.age}}</td>
-            <td>
-              <router-link to="/patient">
-                <v-btn class="mx-2" fab dark small color="pink" >
-                    <v-icon dark>mdi-heart</v-icon>
-                </v-btn>
-                </router-link>
-            </td>
-          </tr>
-      </template>
+        <template v-slot:item="row">
+          <router-link
+            custom
+            v-slot="{ navigate }"
+            :to="{ name: 'Patient', params: { _id: row.item.regis_id } }"
+          >
+            <tr @click="navigate">
+              <td>{{ row.item.regis_id }}</td>
+              <td>{{ row.item.firstname }}</td>
+              <td>{{ row.item.lastname }}</td>
+              <td>{{ row.item.age }}</td>
+            </tr>
+          </router-link>
+        </template>
       </v-data-table>
     </v-card>
   </div>
 </template>
 
 <script>
+import DatabaseService from "@/services/DatabaseService";
 export default {
   data() {
     return {
@@ -104,38 +240,53 @@ export default {
       headers: [
         {
           text: "Registration No.",
-          value: "_id",
+          value: "regis_id",
         },
         {
           text: "First Name",
-          value: "first",
+          value: "firstname",
         },
         {
           text: "Last Name",
-          value: "last",
+          value: "lastname",
         },
         {
           text: "Age",
           value: "age",
         },
-        {
-          text: "Info",
-          value: "info"
-        }
       ],
-      queryResults: [{
-          _id: "1234567890",
-          first: "Harry",
-          last: "Potter",
-          age: "112",
-          info: "/patient"
-      }],
+      queryResults: [],
+      EnableDialog: false,
+      DisbaleDialog: false,
+      adminMode: false,
+      // queryResults: [
+      //   {
+      //     _id: "1234567890",
+      //     first: "Harry",
+      //     last: "Potter",
+      //     age: "112",
+      //   },
+      // ],
     };
   },
   methods: {
     queryRange: function () {
       console.log("query");
     },
+    enableAdminMode: function (bool) {
+      this.adminMode = bool;
+      this.dialog = false;
+    },
+    userAdd: function() {
+      console.log('ADDED')
+    }
   },
+  async mounted() {
+    // call backend to req data
+    console.log(this.queryResults);
+    this.queryResults = await DatabaseService.getAllPatient();
+    console.log(this.queryResults);
+  },
+
 };
 </script>

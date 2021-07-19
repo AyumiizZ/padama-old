@@ -5,6 +5,8 @@ import Register from "@/views/Register";
 import Login from "@/views/Login";
 import Search from "@/views/Search"
 import Patient from "@/views/Patient"
+import Vdo from "@/views/Vdo"
+import Pdf from "@/views/Pdf"
 
 Vue.use(VueRouter);
 
@@ -39,9 +41,19 @@ const routes = [
     component: Search
   },
   {
-    path: "/patient",
+    path: "/patient/:_id",
     name: "Patient",
     component: Patient
+  },
+  {
+    path: "/vdo/:_id",
+    name: "VDO",
+    component: Vdo,
+  },
+  {
+    path: "/pdf/:_id",
+    name: "PDF",
+    component: Pdf
   }
 ];
 
