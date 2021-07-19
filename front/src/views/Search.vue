@@ -153,51 +153,7 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="AddPatientDialog" width="500">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              class="mx-2"
-              fab
-              dark
-              color="blue lighten-2"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon dark> mdi-account-plus </v-icon>
-            </v-btn>
-          </template>
-
-          <v-card>
-            <v-card-title class="text-h5 grey lighten-2">
-              Disable admin mode
-            </v-card-title>
-
-            <v-card-text>
-              After turn off admin mode you can not
-              <li>Edit user data</li>
-              <li>Permanent deleted user data</li>
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-btn color="red lighten-1" text @click="AddPatientDialog = false">
-                Cancel
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
-                color=" primary"
-                text
-                @click="
-                  AddPatientDialog = false;
-                  userAdd();
-                "
-              >
-                Add user
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <add-patient-dialog />
       </v-card-title>
 
       <v-divider></v-divider>
@@ -211,13 +167,14 @@
           <router-link
             custom
             v-slot="{ navigate }"
-            :to="{ name: 'Patient', params: { _id: row.item.regis_id } }"
+            :to="{ name: 'Patient', params: { _id: row.item.regisId } }"
           >
             <tr @click="navigate">
-              <td>{{ row.item.regis_id }}</td>
+              <td>{{ row.item.regisID }}</td>
               <td>{{ row.item.firstname }}</td>
               <td>{{ row.item.lastname }}</td>
-              <td>{{ row.item.age }}</td>
+              <td>{{ row.item.birthDate }}</td>
+              <td>{{ calAge(row.item.birthDate) }}</td>
             </tr>
           </router-link>
         </template>
@@ -228,7 +185,9 @@
 
 <script>
 import DatabaseService from "@/services/DatabaseService";
+import AddPatientDialog from '../components/AddPatientDialog.vue';
 export default {
+  components: {AddPatientDialog},
   data() {
     return {
       RegistrationNo: null,
@@ -240,7 +199,7 @@ export default {
       headers: [
         {
           text: "Registration No.",
-          value: "regis_id",
+          value: "regisID",
         },
         {
           text: "First Name",
@@ -249,6 +208,10 @@ export default {
         {
           text: "Last Name",
           value: "lastname",
+        },
+        {
+          text: "Birth Date",
+          value: "birthDate",
         },
         {
           text: "Age",
@@ -277,8 +240,15 @@ export default {
       this.adminMode = bool;
       this.dialog = false;
     },
-    userAdd: function() {
-      console.log('ADDED')
+    calAge: function(birthDateString) {
+      var today = new Date()
+      var birthDate = new Date(birthDateString)
+      var age = today.getFullYear() - birthDate.getFullYear();
+      var m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+      }
+      return age;
     }
   },
   async mounted() {

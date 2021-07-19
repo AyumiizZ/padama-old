@@ -8,6 +8,9 @@ export default {
         return result.data;
       });
   },
+  addPatient(user_info) {
+    return API().post("patient", user_info)
+  },
   //   getPDF() {
   //     API().get("static/pdf1.pdf", {
   //         params: {

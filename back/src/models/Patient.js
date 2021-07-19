@@ -1,9 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
   const Patient = sequelize.define("Patient", {
-    regis_id: DataTypes.STRING,
+    regisID: DataTypes.STRING,
     firstname: DataTypes.STRING,
     lastname: DataTypes.STRING,
-    age: DataTypes.STRING,
+    birthDate: DataTypes.DATE,
   });
   return Patient;
 };
