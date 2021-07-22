@@ -23,10 +23,11 @@ module.exports = {
   },
   async login(req, res) {
     try {
-      const { email, password } = req.body;
+      const { username, password } = req.body;
       const user = await User.findOne({
         where: {
-          email: email,
+          // email: email,
+          username: username
         },
       });
       if (!user) {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Register</h1>
-    <input type="email" name="email" v-model="email" placeholder="email" />
+    <input type="text" name="username" v-model="username" placeholder="username" />
     <br />
     <input
       type="password"
@@ -22,7 +22,7 @@ export default {
   components: {},
   data() {
     return {
-      email: "",
+      username: "",
       password: "",
       error: "",
     };
@@ -31,8 +31,9 @@ export default {
     async register() {
       try {
         const response = await AuthenticationService.register({
-          email: this.email,
+          username: this.username,
           password: this.password,
+          role: "guest"
         });
         this.error = "";
         this.$store.dispatch("setToken", response.data.token);

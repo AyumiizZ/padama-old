@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Login</h1>
-    <input type="email" name="email" v-model="email" placeholder="email" />
+    <input type="username" name="username" v-model="username" placeholder="username" />
     <br />
     <input
       type="password"
@@ -22,7 +22,7 @@ export default {
   components: {},
   data() {
     return {
-      email: "",
+      username: "",
       password: "",
       error:''
     };
@@ -31,7 +31,7 @@ export default {
     async login() {
       try {
         const response = await AuthenticationService.login({
-          email: this.email,
+          username: this.username,
           password: this.password,
         });
         this.error =  ''

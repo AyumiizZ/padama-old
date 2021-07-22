@@ -3,10 +3,12 @@ const Joi = require('joi')
 module.exports = {
     async register (req, res, next) {
         const schema = Joi.object({
-            email: Joi.string()
-            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'th'] } }),
+            username: Joi.string().min(5).max(18).required(),
+            // email: Joi.string()
+            // .email({ minDomainSegments: 2, tlds: { allow: ['com', 'th'] } }),
             password: Joi.string()
-            .pattern(new RegExp('^[a-zA-Z0-9@]{8,32}$'))
+            .pattern(new RegExp('^[a-zA-Z0-9@]{8,32}$')),
+            role: Joi.string().valid(...['admin','user','guest']),
         })
 
         try {
