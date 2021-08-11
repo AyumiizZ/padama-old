@@ -68,6 +68,83 @@
               ></v-text-field>
             </template>
           </vc-date-picker>
+          <v-radio-group v-model="sex" row>
+            <template v-slot:label>
+              <div>Sex</div>
+            </template>
+            <v-radio value="m">
+              <template v-slot:label>
+                <div>Male</div>
+              </template>
+            </v-radio>
+            <v-radio value="f">
+              <template v-slot:label>
+                <div>Female</div>
+              </template>
+            </v-radio>
+            <v-radio value="o">
+              <template v-slot:label>
+                <div>Rather not say</div>
+              </template>
+            </v-radio>
+          </v-radio-group>
+          <div>
+            <p>Underlying disease</p>
+            <v-row>
+              <v-col>
+                <v-checkbox
+                  v-model="selected"
+                  label="DM"
+                  value="DM"
+                ></v-checkbox>
+              </v-col>
+              <v-col>
+                <v-checkbox
+                  v-model="selected"
+                  label="HT"
+                  value="HT"
+                ></v-checkbox> </v-col
+              ><v-col>
+                <v-checkbox
+                  v-model="selected"
+                  label="DLP"
+                  value="DLP"
+                ></v-checkbox> </v-col
+              ><v-col>
+                <v-checkbox
+                  v-model="selected"
+                  label="CKD"
+                  value="CKD"
+                ></v-checkbox>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="1">
+                <v-checkbox v-model="enabled" hide-details></v-checkbox>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  :disabled="!enabled"
+                  label="Others"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </div>
+          <v-radio-group v-model="smoking" row>
+            <template v-slot:label>
+              <div>Smoking</div>
+            </template>
+            <v-radio value="y">
+              <template v-slot:label>
+                <div>Yes</div>
+              </template>
+            </v-radio>
+            <v-radio value="n">
+              <template v-slot:label>
+                <div>No</div>
+              </template>
+            </v-radio>
+          </v-radio-group>
         </v-card-text>
 
         <v-divider></v-divider>
@@ -121,6 +198,10 @@ export default {
       firstname: null,
       lastname: null,
       birthDate: null,
+      sex: null,
+      smoking: null,
+      enabled: false,
+      selected: [],
       // regisIDRules: [(v) => v.length <= 10 || "10 Digits only"],
     };
   },
@@ -159,7 +240,7 @@ export default {
         this.addPatientDialog = false;
         this.patientAddedDialog = true;
       }
-      this.createPatient()
+      this.createPatient();
       this.clear();
     },
     clear() {
