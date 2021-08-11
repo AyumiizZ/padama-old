@@ -37,6 +37,14 @@ export default {
         this.error =  ''
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
+        if (this.$route.query.redirect){
+          console.log('aaa')
+          this.$router.push({path: this.$route.query.redirect})
+          
+        }
+        else{
+          this.$router.push(({name: 'Home'}))
+        }
       } catch (err) {
         this.error = err.response.data.error
       }
