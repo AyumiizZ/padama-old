@@ -18,58 +18,242 @@
         <v-card-title class="text-h5 grey lighten-2">
           Add Patient Form
         </v-card-title>
-
-        <v-card-text>
-          <v-text-field
-            v-model="regisID"
-            :error-messages="regisIDErrors"
-            :counter="10"
-            label="Registration Number"
-            outlined
-            required
-            @input="$v.regisID.$touch()"
-            @blur="$v.regisID.$touch()"
-          >
-          </v-text-field>
-          <v-text-field
-            v-model="firstname"
-            :error-messages="firstnameErrors"
-            :counter="40"
-            label="Firstname"
-            outlined
-            required
-            @input="$v.firstname.$touch()"
-            @blur="$v.firstname.$touch()"
-          >
-          </v-text-field>
-          <v-text-field
-            v-model="lastname"
-            :error-messages="lastnameErrors"
-            :counter="40"
-            label="Lastname"
-            outlined
-            required
-            @input="$v.lastname.$touch()"
-            @blur="$v.lastname.$touch()"
-          >
-          </v-text-field>
-          <vc-date-picker v-model="birthDate">
+        <v-card-text v-if="page == 1">
+          <vc-date-picker v-model="visitedDate">
             <template v-slot="{ inputValue, inputEvents }">
               <v-text-field
                 readonly
-                :error-messages="birthDateErrors"
-                label="Birth Date"
+                :error-messages="visitedDateErrors"
+                label="Visit Date"
                 :value="inputValue"
                 v-on="inputEvents"
                 outlined
                 required
-                @input="$v.birthDate.$touch()"
-                @blur="$v.birthDate.$touch()"
+                @input="$v.visitedDate.$touch()"
+                @blur="$v.visitedDate.$touch()"
               ></v-text-field>
             </template>
           </vc-date-picker>
+          <v-combobox
+            v-model="diagnosisModel"
+            :items="diagnosisItems"
+            :search-input.sync="diagnosisSearch"
+            hide-selected
+            hint="Maximum of 5 tags"
+            label="Diagnosis"
+            multiple
+            persistent-hint
+            small-chips
+            close
+            outlined
+          >
+            <template v-slot:no-data>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    No results matching "<strong>{{ diagnosisSearch }}</strong
+                    >". Press <kbd>enter</kbd> to create a new one
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-combobox>
+          <v-select :items="typeItems" label="Type" outlined></v-select>
+          <v-row>
+            <v-col cols="6">
+              <v-text-field
+                v-model="onset"
+                :error-messages="onsetErrors"
+                :counter="10"
+                label="Onset"
+                outlined
+                required
+                @input="$v.onset.$touch()"
+                @blur="$v.onset.$touch()"
+              >
+              </v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-select :items="onsetItems" label="Type" outlined></v-select>
+            </v-col>
+            <v-col cols="12">
+              <v-textarea
+                v-model="phyExam"
+                outlined
+                clearable
+                rows="1"
+                no-resize
+                clear-icon="mdi-close-circle"
+                label="Physical Examination"
+                auto-grow
+              >
+              </v-textarea>
+            </v-col>
+          </v-row>
         </v-card-text>
+        <v-card-text v-if="page == 2">
+          <v-checkbox v-model="noneOperation" label="None"></v-checkbox>
+          <v-text-field v-model="operation" label="Operation" outlined required>
+          </v-text-field>
+          <vc-date-picker v-model="visitedDate">
+            <template v-slot="{ inputValue, inputEvents }">
+              <v-text-field
+                readonly
+                :error-messages="visitedDateErrors"
+                label="Visit Date"
+                :value="inputValue"
+                v-on="inputEvents"
+                outlined
+                required
+                @input="$v.visitedDate.$touch()"
+                @blur="$v.visitedDate.$touch()"
+              ></v-text-field>
+            </template>
+          </vc-date-picker>
+          <v-textarea
+            v-model="operativeNote"
+            outlined
+            clearable
+            rows="1"
+            no-resize
+            clear-icon="mdi-close-circle"
+            label="Operative Note"
+            auto-grow
+          />
+          <v-text-field
+            v-model="bloodLoss"
+            label="Blood Loss"
+            suffix="mL"
+            outlined
+            required
+          />
+          <v-text-field
+            v-model="operativeTime"
+            label="Operative Time"
+            suffix="min"
+            outlined
+            required
+          />
+          <v-text-field
+            v-model="complication"
+            label="Complication"
+            outlined
+            required
+          />
+          <v-textarea
+            v-model="operativeOthers"
+            outlined
+            clearable
+            rows="1"
+            no-resize
+            clear-icon="mdi-close-circle"
+            label="Others"
+            auto-grow
+          />
+        </v-card-text>
+        <v-card-text v-if="page == 3">
+          <h3>Preoperative</h3>
+          <v-file-input
+            v-model="preVDO"
+            counter
+            label="Preoperative Video"
+            multiple
+            placeholder="Select your files"
+            prepend-icon="mdi-video-plus"
+            outlined
+            :show-size="1000"
+          >
+            <template v-slot:selection="{ text }">
+              <v-chip color="deep-purple accent-4" dark label small>
+                {{ text }}
+              </v-chip>
+            </template>
+          </v-file-input>
+          <v-file-input
+            v-model="prePhoto"
+            counter
+            label="Preoperative Photo"
+            multiple
+            placeholder="Select your files"
+            prepend-icon="mdi-image-multiple"
+            outlined
+            :show-size="1000"
+          >
+            <template v-slot:selection="{ text }">
+              <v-chip color="deep-purple accent-4" dark label small>
+                {{ text }}
+              </v-chip>
+            </template>
+          </v-file-input>
+          <h3>Intra-operative</h3>
+          <v-file-input
+            v-model="intraVDO"
+            counter
+            label="Intra-operative Video"
+            multiple
+            placeholder="Select your files"
+            prepend-icon="mdi-video-plus"
+            outlined
+            :show-size="1000"
+          >
+            <template v-slot:selection="{ text }">
+              <v-chip color="deep-purple accent-4" dark label small>
+                {{ text }}
+              </v-chip>
+            </template>
+          </v-file-input>
 
+          <v-file-input
+            v-model="intraPhoto"
+            counter
+            label="Intra-operative Photo"
+            multiple
+            placeholder="Select your files"
+            prepend-icon="mdi-image-multiple"
+            outlined
+            :show-size="1000"
+          >
+            <template v-slot:selection="{ text }">
+              <v-chip color="deep-purple accent-4" dark label small>
+                {{ text }}
+              </v-chip>
+            </template>
+          </v-file-input>
+          <h3>Post-operative</h3>
+          <v-file-input
+            v-model="postVDO"
+            counter
+            label="Post-operative Video"
+            multiple
+            placeholder="Select your files"
+            prepend-icon="mdi-video-plus"
+            outlined
+            :show-size="1000"
+          >
+            <template v-slot:selection="{ text }">
+              <v-chip color="deep-purple accent-4" dark label small>
+                {{ text }}
+              </v-chip>
+            </template>
+          </v-file-input>
+
+          <v-file-input
+            v-model="postPhoto"
+            counter
+            label="Post-operative Photo"
+            multiple
+            placeholder="Select your files"
+            prepend-icon="mdi-image-multiple"
+            outlined
+            :show-size="1000"
+          >
+            <template v-slot:selection="{ text }">
+              <v-chip color="deep-purple accent-4" dark label small>
+                {{ text }}
+              </v-chip>
+            </template>
+          </v-file-input>
+        </v-card-text>
         <v-divider></v-divider>
 
         <v-card-actions>
@@ -79,10 +263,31 @@
           <v-spacer></v-spacer
           ><v-btn color="black lighten-1" text @click="clear()"> Clear </v-btn
           ><v-spacer></v-spacer>
-          <v-btn color=" primary" text @click="submit()"> Add user </v-btn>
+          <v-btn color=" primary" text @click="page += 1" v-if="page !== 3">
+            Next
+          </v-btn>
+          <v-btn color=" primary" text @click="submit()" v-if="page === 3">
+            Next
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="patientAddedDialog" width="500">
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2"> Status </v-card-title>
+
+        <v-card-text> Patient Added </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-btn color="primary" text @click="patientAddedDialog = false">
+            Submit
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-dialog v-model="patientAddedDialog" width="500">
       <v-card>
         <v-card-title class="text-h5 grey lighten-2"> Status </v-card-title>
@@ -111,16 +316,41 @@ export default {
     regisID: { required, minLength: minLength(10), maxLength: maxLength(10) },
     firstname: { required },
     lastname: { required },
-    birthDate: { required },
+    visitedDate: { required },
+    onset: { required, minLength: minLength(4), maxLength: maxLength(4) },
   },
   data() {
     return {
       addPatientDialog: false,
+      addPatientDialog2: false,
+      addPatientDialog3: false,
       patientAddedDialog: false,
       regisID: null,
       firstname: null,
       lastname: null,
-      birthDate: null,
+      visitedDate: null,
+      diagnosisItems: [
+        "Unspecified",
+        "Cleft palate",
+        "Cleft hard and soft palate with cleft lip",
+        "Cleft soft palate",
+        "Cleft lip",
+        "Cleft hard palate",
+      ],
+      diagnosisModel: [],
+      diagnosisSearch: null,
+      typeItems: ["Tumor", "Non-tumor", "Aesthetic", "Others"],
+      onset: null,
+      onsetItems: ["Hour", "Day", "Month", "Year"],
+      phyExam: null,
+      noneOperation: false,
+      preVDO: [],
+      prePhoto: [],
+      intraVDO: [],
+      intraPhoto: [],
+      postVDO: [],
+      postPhoto: [],
+      page: 1,
       // regisIDRules: [(v) => v.length <= 10 || "10 Digits only"],
     };
   },
@@ -145,10 +375,18 @@ export default {
       !this.$v.lastname.required && errors.push("This is required");
       return errors;
     },
-    birthDateErrors() {
+    visitedDateErrors() {
       const errors = [];
-      if (!this.$v.birthDate.$dirty) return errors;
-      !this.$v.birthDate.required && errors.push("This is required");
+      if (!this.$v.visitedDate.$dirty) return errors;
+      !this.$v.visitedDate.required && errors.push("This is required");
+      return errors;
+    },
+    onsetErrors() {
+      const errors = [];
+      if (!this.$v.onset.$dirty) return errors;
+      !this.$v.onset.maxLength && errors.push("4 Digits only");
+      !this.$v.onset.minLength && errors.push("4 Digits only");
+      !this.$v.onset.required && errors.push("onset is required.");
       return errors;
     },
   },
@@ -159,7 +397,7 @@ export default {
         this.addPatientDialog = false;
         this.patientAddedDialog = true;
       }
-      this.createPatient()
+      this.createPatient();
       this.clear();
     },
     clear() {
@@ -179,6 +417,13 @@ export default {
         });
       } catch (err) {
         console.log(err);
+      }
+    },
+  },
+  watch: {
+    diagnosisModel(val) {
+      if (val.length > 5) {
+        this.$nextTick(() => this.diagnosisModel.pop());
       }
     },
   },

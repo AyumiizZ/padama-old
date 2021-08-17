@@ -63,98 +63,7 @@
       <v-card-title>
         Queries History
         <v-spacer></v-spacer>
-        <v-dialog v-model="EnableDialog" width="500" v-if="!adminMode">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              class="mx-2"
-              fab
-              dark
-              color="blue lighten-2"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon dark> mdi-account-cog </v-icon>
-            </v-btn>
-
-          </template>
-
-          <v-card>
-            <v-card-title class="text-h5 grey lighten-2">
-              Enable admin mode
-            </v-card-title>
-
-            <v-card-text>
-              After turn on admin mode you can
-              <li>Edit user data</li>
-              <li>Permanent deleted user data</li>
-              Once you delete a user, there is no going back. Please be certain.
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-btn color="primary" text @click="EnableDialog = false">
-                Cancel
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="red lighten-1"
-                text
-                @click="
-                  EnableDialog = false;
-                  adminMode = true;
-                "
-              >
-                Enable
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="DisbaleDialog" width="500" v-if="adminMode">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              class="mx-2"
-              fab
-              dark
-              color="red lighten-2"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon dark> mdi-cancel </v-icon>
-            </v-btn>
-          </template>
-
-          <v-card>
-            <v-card-title class="text-h5 grey lighten-2">
-              Disable admin mode
-            </v-card-title>
-
-            <v-card-text>
-              After turn off admin mode you can not
-              <li>Edit user data</li>
-              <li>Permanent deleted user data</li>
-            </v-card-text>
-
-            <v-divider></v-divider>
-
-            <v-card-actions>
-              <v-btn color="red lighten-1" text @click="DisbaleDialog = false">
-                Cancel
-              </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
-                color=" primary"
-                text
-                @click="
-                  DisbaleDialog = false;
-                  adminMode = false;
-                "
-              >
-                Disable
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <add-patient-data-dialog></add-patient-data-dialog>
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -187,7 +96,9 @@
 </template>
 
 <script>
+import AddPatientDataDialog from '../components/AddPatientDataDialog.vue';
 export default {
+  components: { AddPatientDataDialog },
   // components: { VideoPlayer },
   data() {
     return {
