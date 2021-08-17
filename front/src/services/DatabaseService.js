@@ -11,6 +11,17 @@ export default {
   addPatient(user_info) {
     return API().post("patient", user_info)
   },
+  getCase(patientID) {
+    console.log(patientID)
+    return API()
+      .get("case")
+      .then((result) => {
+        return result.data;
+      });
+  },
+  addCase(case_info) {
+    return API().post("case", case_info)
+  },
   //   getPDF() {
   //     API().get("static/pdf1.pdf", {
   //         params: {

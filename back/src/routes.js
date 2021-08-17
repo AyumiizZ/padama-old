@@ -11,4 +11,6 @@ module.exports = (app) => {
   app.post("/login", AuthenticationController.login);
   app.get("/patient", DatabaseController.getPatient);
   app.post("/patient", DatabaseController.addPatient);
+  app.get("/case", DatabaseController.getCase);
+  app.post("/case", DatabaseController.addCase);
 };

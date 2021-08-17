@@ -1,12 +1,13 @@
 <template>
   <div>
     <v-card>
+      <h1>{{patientResults._id}} Harry Potter</h1>
       <v-list-item>
         <v-row>
           <v-col>
             <v-text-field
-              v-model="RegistrationNo"
-              label="Registration No."
+              v-model="caseID"
+              label="Case No."
               outlined
               clearable
             />
@@ -73,20 +74,53 @@
       >
         <template v-slot:item="row">
           <tr>
-            <td>{{ row.item._id }}</td>
-            <td>{{ row.item.first }}</td>
-            <td>{{ row.item.last }}</td>
-            <td>{{ row.item.age }}</td>
+            <td>{{ row.item.visitDate }}</td>
+            <td>{{ patientResults._id }}</td>
+            <td>{{ patientResults.first }}</td>
+            <td>{{ patientResults.last }}</td>
+            <td>{{ patientResults.age }}</td>
             <td>
-              <router-link :to="{ name: 'PDF', params : {_id: row.item._id}}">
+              <router-link
+                :to="{ name: 'PDF', params: { _id: patientResults._id } }"
+              >
                 <v-btn>Show PDF</v-btn>
               </router-link>
-              <router-link :to="{ name: 'VDO', params : {_id: row.item._id}}">
-                <v-btn >Show Video</v-btn>
+              <router-link
+                :to="{ name: 'VDO', params: { _id: patientResults._id } }"
+              >
+                <v-btn>Show Video</v-btn>
               </router-link>
-              <router-link :to="{ name: 'Pic', params : {_id: row.item._id}}">
+              <router-link
+                :to="{ name: 'Pic', params: { _id: patientResults._id } }"
+              >
                 <v-btn>Show Picture</v-btn>
               </router-link>
+              <v-dialog v-model="row.item.dialog" width="500">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                    More Info
+                  </v-btn>
+                </template>
+
+                <v-card>
+                  <v-card-title class="text-h5 grey lighten-2">
+                    Info
+                  </v-card-title>
+
+                  <v-card-text>
+                    {{ row.item }}
+                  </v-card-text>
+
+                  <v-divider></v-divider>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text @click="row.item.dialog = false">
+                      I accept
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
             </td>
           </tr>
         </template>
@@ -96,7 +130,8 @@
 </template>
 
 <script>
-import AddPatientDataDialog from '../components/AddPatientDataDialog.vue';
+import DatabaseService from "@/services/DatabaseService";
+import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
 export default {
   components: { AddPatientDataDialog },
   // components: { VideoPlayer },
@@ -104,8 +139,9 @@ export default {
     return {
       expanded: [],
       singleExpand: false,
-      
+      caseID: null,
       dialog: false,
+      dialog2: false,
       RegistrationNo: null,
       date: new Date(),
       range: null,
@@ -114,7 +150,11 @@ export default {
       },
       headers: [
         {
-          text: "Registration No.",
+          text: "Visited Date",
+          value: "aaa",
+        },
+        {
+          text: "Case No.",
           value: "_id",
         },
         {
@@ -129,66 +169,52 @@ export default {
           text: "Age",
           value: "age",
         },
-        { text: '', value: 'attach' },
+        { text: "", value: "attach" },
       ],
-      queryResults: [
-        {
-          _id: "1234567890",
-          first: "Harry",
-          last: "Potter",
-          age: "112",
-          vdo: [
-            {
-              filename: "abc.mp4",
-              label: "Lorem ipstum",
-              created: "21 June 2021",
-            },
-            {
-              filename: "010203.mp4",
-              label: "Lorem ipstum",
-              created: "21 June 2021",
-            },
-            {
-              filename: "qwery.mp4",
-              label: "Lorem ipstum",
-              created: "21 June 2021",
-            },
-            {
-              filename: "important.mp4",
-              label: "Lorem ipstum",
-              created: "21 June 2021",
-            },
-          ],
-          photo: [
-            {
-              filename: "abc.mp4",
-              label: "Lorem ipstum",
-              created: "21 June 2021",
-            },
-            {
-              filename: "010203.mp4",
-              label: "Lorem ipstum",
-              created: "21 June 2021",
-            },
-            {
-              filename: "qwery.mp4",
-              label: "Lorem ipstum",
-              created: "21 June 2021",
-            },
-            {
-              filename: "important.mp4",
-              label: "Lorem ipstum",
-              created: "21 June 2021",
-            },
-          ],
-        },
-      ],
+      patientResults: {
+        _id: this.$route.params._id,
+        first: "Harry",
+        last: "Potter",
+        age: "112",
+      },
+      queryResults: [],
     };
   },
   methods: {
     queryRange: function () {
       console.log("query");
     },
+    calAge: function (birthDateString) {
+      var today = new Date();
+      var birthDate = new Date(birthDateString);
+      var age = today.getFullYear() - birthDate.getFullYear();
+      var m = today.getMonth() - birthDate.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age;
+    },
+  },
+  async mounted() {
+    // call backend to req data
+    
+    var tempQueryResults = await DatabaseService.getCase();
+    console.log('0')
+    console.log(tempQueryResults)
+    for (var key in tempQueryResults){
+      console.log('----')
+      console.log(tempQueryResults[key]["patientID"])
+      console.log(this.patientResults._id)
+      console.log('----')
+      if (tempQueryResults[key]["patientID"] === this.patientResults._id){
+        this.queryResults.push(tempQueryResults[key])
+      }
+      else{
+        console.log('aaa')
+      }
+    }
+    console.log(this.queryResults);
+    this.queryResults.dialog = false;
   },
 };
 </script>
