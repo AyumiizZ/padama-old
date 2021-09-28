@@ -22,6 +22,14 @@ export default {
   addCase(case_info) {
     return API().post("case", case_info)
   },
+  upload(image) {
+    return API().post("upload", image)
+  },
+  getPhotoList() {
+    return API().get("photoList").then((result) => {
+      return result.data;
+    });
+  }
   //   getPDF() {
   //     API().get("static/pdf1.pdf", {
   //         params: {

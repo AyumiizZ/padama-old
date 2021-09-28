@@ -64,6 +64,7 @@
       <v-card-title>
         Queries History
         <v-spacer></v-spacer>
+        <TestUpLoadFile />
         <add-patient-data-dialog></add-patient-data-dialog>
       </v-card-title>
       <v-data-table
@@ -108,7 +109,14 @@
                   </v-card-title>
 
                   <v-card-text>
-                    {{ row.item }}
+                    <li>
+                      <strong>Diagnosis: </strong>
+{{ row.item.diagnosis }}
+                    </li>
+                                        <li>
+{{ row.item.visitDate }}
+                    </li>
+                    
                   </v-card-text>
 
                   <v-divider></v-divider>
@@ -132,8 +140,9 @@
 <script>
 import DatabaseService from "@/services/DatabaseService";
 import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
+import TestUpLoadFile from "../components/TestUpLoadFile.vue";
 export default {
-  components: { AddPatientDataDialog },
+  components: { AddPatientDataDialog, TestUpLoadFile  },
   // components: { VideoPlayer },
   data() {
     return {

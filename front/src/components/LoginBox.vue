@@ -1,6 +1,30 @@
 <template>
   <div>
-    <h1>Login</h1>
+    <v-card>
+      <v-card-title>
+        Login
+      </v-card-title>
+      <v-card-text> <v-text-field
+            v-model="username"
+            label="username"
+            type="username"
+            name="username"
+            outlined
+      />
+      <v-text-field
+            v-model="password"
+            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="show1 ? 'text' : 'password'"
+            name="password"
+            label="password"
+            outlined
+            @click:append="show1 = !show1"
+          />
+          <v-btn @click="login">Login</v-btn>
+          </v-card-text>
+     
+    </v-card>
+    <!-- <h1>Login</h1>
     <input type="username" name="username" v-model="username" placeholder="username" />
     <br />
     <input
@@ -10,8 +34,8 @@
       placeholder="password"
     />
     <div class="error" v-html="error"></div>
-    <br />
-    <button @click="login">Login</button>
+    <br /> -->
+    <!-- <button @click="login">Login</button> -->
   </div>
 </template>
 
@@ -24,7 +48,8 @@ export default {
     return {
       username: "",
       password: "",
-      error:''
+      error:'',
+      show1:false
     };
   },
   methods: {

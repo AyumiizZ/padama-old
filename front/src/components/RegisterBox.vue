@@ -1,6 +1,31 @@
 <template>
   <div>
-    <h1>Register</h1>
+    <v-card>
+      <v-card-title>
+       Register
+      </v-card-title>
+      <v-card-text> <v-text-field
+            v-model="username"
+            label="username"
+            type="username"
+            name="username"
+            outlined
+      />
+      <v-text-field
+            v-model="password"
+            :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="show1 ? 'text' : 'password'"
+            name="password"
+            label="password"
+            outlined
+            @click:append="show1 = !show1"
+          />
+          <div class="error" v-html="error"></div>
+          <v-btn @click="register">Register</v-btn>
+          </v-card-text>
+     
+    </v-card>
+    <!-- <h1>Register</h1>
     <input type="text" name="username" v-model="username" placeholder="username" />
     <br />
     <input
@@ -11,7 +36,7 @@
     />
     <div class="error" v-html="error"></div>
     <br />
-    <button @click="register">Register</button>
+    <button @click="register">Register</button> -->
   </div>
 </template>
 
