@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card> aaa </v-card>
+    <!-- <v-card> aaa </v-card> -->
     <v-card>
       <v-card-title>
         Picture List
