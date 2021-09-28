@@ -18,16 +18,21 @@
         <v-card-title class="text-h5 grey lighten-2">
           Add Patient Form
         </v-card-title>
-          <v-file-input
-            v-model="photo"
-            counter
-            label="Photo"
-            multiple
-            placeholder="Select your files"
-            prepend-icon="mdi-image-plus"
-            outlined
-            :show-size="1000"
-        />
+        <v-file-input
+          v-model="photo"
+          counter
+          label="Photo"
+          multiple
+          placeholder="Select your files"
+          prepend-icon="mdi-image-plus"
+          outlined
+          :show-size="1000"
+          ><template v-slot:selection="{ text }">
+            <v-chip color="deep-purple accent-4" dark label small>
+              {{ text }}
+            </v-chip>
+          </template>
+        </v-file-input>
         <v-divider></v-divider>
         <v-card-actions>
           <v-btn color="red lighten-1" text @click="dialog = false">
@@ -54,7 +59,7 @@ export default {
       photo: [],
       image: "",
       error: "",
-      dialog: false
+      dialog: false,
     };
   },
   methods: {
@@ -82,11 +87,8 @@ export default {
       try {
         const response = await DatabaseService.upload({
           image: this.image,
-          real_filename: this.image.name
+          real_filename: this.image.name,
         });
-        // this.error = "";
-        // this.$store.dispatch("setToken", response.data.token);
-        // this.$store.dispatch("setUser", response.data.user);
         console.log("ret link");
         console.log(response.data.url);
       } catch (err) {
