@@ -167,10 +167,10 @@
           <router-link
             custom
             v-slot="{ navigate }"
-            :to="{ name: 'Patient', params: { _id: row.item.regisID } }"
+            :to="{ name: 'Patient', params: { _id: row.item.patientID } }"
           >
             <tr @click="navigate">
-              <td>{{ row.item.regisID }}</td>
+              <td>{{ row.item.patientID }}</td>
               <td>{{ row.item.firstname }}</td>
               <td>{{ row.item.lastname }}</td>
               <td>{{ row.item.sex }}</td>
@@ -240,7 +240,7 @@ export default {
       headers: [
         {
           text: "Registration No.",
-          value: "regisID",
+          value: "patientID",
         },
         {
           text: "First Name",
@@ -267,8 +267,8 @@ export default {
           value: "ud",
         },
         {
-          text: "Smoke",
-          value: "smoke",
+          text: "Smoking",
+          value: "smoking",
         },
         // { text: "", align:"center", value: "attach" },
       ],
@@ -309,6 +309,7 @@ export default {
     // call backend to req data
     console.log(this.queryResults);
     this.queryResults = await DatabaseService.getAllPatient();
+    console.log('1234')
     console.log(this.queryResults);
   },
 

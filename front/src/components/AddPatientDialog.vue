@@ -21,14 +21,14 @@
 
         <v-card-text>
           <v-text-field
-            v-model="regisID"
+            v-model="patientID"
             :error-messages="regisIDErrors"
             :counter="10"
             label="Registration Number"
             outlined
             required
-            @input="$v.regisID.$touch()"
-            @blur="$v.regisID.$touch()"
+            @input="$v.patientID.$touch()"
+            @blur="$v.patientID.$touch()"
           >
           </v-text-field>
           <v-text-field
@@ -124,6 +124,7 @@
               </v-col>
               <v-col>
                 <v-text-field
+                  v-model="others"
                   :disabled="!enabled"
                   label="Others"
                 ></v-text-field>
@@ -185,7 +186,7 @@ import DatabaseService from "@/services/DatabaseService";
 export default {
   mixins: [validationMixin],
   validations: {
-    regisID: { required, minLength: minLength(10), maxLength: maxLength(10) },
+    patientID: { required, minLength: minLength(10), maxLength: maxLength(10) },
     firstname: { required },
     lastname: { required },
     birthDate: { required },
@@ -194,7 +195,7 @@ export default {
     return {
       addPatientDialog: false,
       patientAddedDialog: false,
-      regisID: null,
+      patientID: null,
       firstname: null,
       lastname: null,
       birthDate: null,
@@ -202,16 +203,17 @@ export default {
       smoking: null,
       enabled: false,
       selected: [],
+      others: null
       // regisIDRules: [(v) => v.length <= 10 || "10 Digits only"],
     };
   },
   computed: {
     regisIDErrors() {
       const errors = [];
-      if (!this.$v.regisID.$dirty) return errors;
-      !this.$v.regisID.maxLength && errors.push("10 Digits only");
-      !this.$v.regisID.minLength && errors.push("10 Digits only");
-      !this.$v.regisID.required && errors.push("ID is required.");
+      if (!this.$v.patientID.$dirty) return errors;
+      !this.$v.patientID.maxLength && errors.push("10 Digits only");
+      !this.$v.patientID.minLength && errors.push("10 Digits only");
+      !this.$v.patientID.required && errors.push("ID is required.");
       return errors;
     },
     firstnameErrors() {
@@ -245,18 +247,30 @@ export default {
     },
     clear() {
       this.$v.$reset();
-      this.regisID = null;
+      this.patientID = null;
       this.firstname = null;
       this.lastname = null;
       this.birthDate = null;
     },
     async createPatient() {
       try {
+        var ud = this.selected.join(',')
+        if (this.enabled){
+          ud += ',' + this.others
+        }
+        console.log({
+          sex: this.sex,
+          selected: ud,
+          smoking: this.smoking,
+        })
         await DatabaseService.addPatient({
-          regisID: this.regisID,
+          patientID: this.patientID,
           firstname: this.firstname,
           lastname: this.lastname,
           birthDate: this.birthDate,
+          sex: this.sex,
+          ud: ud,
+          smoking: this.smoking,
         });
       } catch (err) {
         console.log(err);
