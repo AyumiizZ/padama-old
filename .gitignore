@@ -25,3 +25,4 @@ pnpm-debug.log*
 config.js
 
 *.mp4
+back/src/public/*
