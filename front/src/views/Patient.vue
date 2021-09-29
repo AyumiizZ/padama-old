@@ -229,7 +229,7 @@ export default {
         ret.push(this.diagnosisItems[diag[i]]);
       }
       return ret.sort();
-    }
+    },
   },
   async mounted() {
     // this.diagnosisItems =

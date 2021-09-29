@@ -8,6 +8,7 @@ import Patient from "@/views/Patient";
 import Vdo from "@/views/Vdo";
 import Pdf from "@/views/Pdf";
 import Pic from "@/views/Pic";
+import CaseSearch from "@/views/CaseSearch";
 import PageNotFound from "@/views/PageNotFound";
 import store from "../store";
 
@@ -48,6 +49,14 @@ const routes = [
     path: "/search",
     name: "Search",
     component: Search,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/case-search",
+    name: "caseSearch",
+    component: CaseSearch,
     meta: {
       requiresAuth: true,
     },

@@ -13,6 +13,8 @@ module.exports = (app) => {
   app.post("/login", AuthenticationController.login);
   app.get("/patientList", DatabaseController.getPatientList);
   app.get("/patient", DatabaseController.getPatient)
+  app.get("/query-patient", DatabaseController.queryPatient)
+  app.get("/query-tag", DatabaseController.queryCaseTag)
   app.post("/patient", DatabaseController.addPatient);
   app.get("/case", DatabaseController.getCase);
   app.post("/case", DatabaseController.addCase);

@@ -1,5 +1,6 @@
 const { Patient, File, Case } = require("../models");
 const { register } = require("./AuthenticationController");
+const Sequelize = require("sequelize");
 const base64Img = require("base64-img");
 // var crypto = require('crypto');
 const path = require('path')
@@ -41,6 +42,22 @@ module.exports = {
       });
     }
   },
+  async queryPatient(req, res) {
+    try {
+      // console.log(req)
+      const patient = await Patient.findAll({where: {
+        patientID: {[Sequelize.Op.like]: '%'+req.query._id+'%'}
+      }});
+      // console.log(patient);
+      res.send(patient);
+    } catch (err) {
+      console.log(err)
+      // email already exits
+      res.status(500).send({
+        error: "An error has occured trying to fetch the songs",
+      });
+    }
+  },
   // async getCase(req, res) {
   //   try {
   //     const patient = await Patient.findAll({ limit: 1000 });
@@ -66,9 +83,6 @@ module.exports = {
   },
   async getCase(req, res) {
     try {
-      console.log('---')
-      console.log(req.query)
-      console.log('---')
       const patientCase = await Case.findAll({
         where: {
           patientID: req.query._id
@@ -77,6 +91,32 @@ module.exports = {
       // console.log(patientCase);
       res.send(patientCase);
     } catch (err) {
+      // email already exits
+      res.status(500).send({
+        error: "An error has occured trying to fetch the songs",
+      });
+    }
+  },
+  async queryCaseTag(req, res) {
+    try {
+      var diagList = []
+      for (let i = 0; i < req.query.taglist.length; i++){
+        diagList.push({
+          diagnosis: {
+            [Sequelize.Op.like]: '%'+req.query.taglist[i]+'%'
+          }
+        })
+      }
+      const patientCase = await Case.findAll({where: {
+        [Sequelize.Op.and]: diagList}
+      });
+      // console.log(patient);
+      // {
+      //   patientID: {[Sequelize.Op.like]: '%'+req.query._id+'%'}
+      // }
+      res.send(patientCase);
+    } catch (err) {
+      console.log(err)
       // email already exits
       res.status(500).send({
         error: "An error has occured trying to fetch the songs",
@@ -154,4 +194,5 @@ module.exports = {
       });
     }
   },
+
 };

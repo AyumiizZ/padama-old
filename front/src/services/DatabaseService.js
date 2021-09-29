@@ -15,6 +15,13 @@ export default {
         return result.data;
       });
   },
+  queryPatient(patientID) {
+    return API()
+      .get("query-patient", {params:patientID})
+      .then((result) => {
+        return result.data;
+      });
+  },
   addPatient(user_info) {
     return API().post("patient", user_info)
   },
