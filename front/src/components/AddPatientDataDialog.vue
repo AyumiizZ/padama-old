@@ -503,13 +503,7 @@ export default {
           };
         }
         console.log(caseBody);
-        await DatabaseService.addCase({
-          // caseID: this.caseID,
-          patientID: this.$route.params._id,
-          visitDate: this.visitedDate,
-          diagnosis: this.diagnosisModel,
-          phyExam: this.phyExam,
-        });
+        await DatabaseService.addCase(caseBody);
         // await DatabaseService.addCase({
         //   // caseID: this.caseID,
         //   patientID: this.$route.params._id,

@@ -77,7 +77,7 @@ module.exports = {
     try {
       console.log(req.body);
       processedBody = req.body;
-      processedBody.diagnosis = req.body.diagnosis.join(", ");
+      // processedBody.diagnosis = req.body.diagnosis.join(", ");
       console.log(processedBody);
       const newCase = await Case.create(req.body);
       res.send(newCase.toJSON());
