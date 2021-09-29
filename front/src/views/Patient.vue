@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card>
-      <h1>{{patientResults._id}} Harry Potter</h1>
+      <h1>{{ patientResults._id }} Harry Potter</h1>
       <v-list-item>
         <v-row>
           <v-col>
@@ -64,7 +64,6 @@
       <v-card-title>
         Queries History
         <v-spacer></v-spacer>
-        <TestUpLoadFile />
         <add-patient-data-dialog></add-patient-data-dialog>
       </v-card-title>
       <v-data-table
@@ -111,19 +110,22 @@
                   <v-card-text>
                     <li>
                       <strong>Diagnosis: </strong>
-{{ row.item.diagnosis }}
+                      {{ row.item.diagnosis }}
                     </li>
-                                        <li>
-{{ row.item.visitDate }}
+                    <li>
+                      {{ row.item.visitDate }}
                     </li>
-                    
                   </v-card-text>
 
                   <v-divider></v-divider>
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="primary" text @click="row.item.dialog = false">
+                    <v-btn
+                      color="primary"
+                      text
+                      @click="row.item.dialog = false"
+                    >
                       I accept
                     </v-btn>
                   </v-card-actions>
@@ -140,9 +142,8 @@
 <script>
 import DatabaseService from "@/services/DatabaseService";
 import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
-import TestUpLoadFile from "../components/TestUpLoadFile.vue";
 export default {
-  components: { AddPatientDataDialog, TestUpLoadFile  },
+  components: { AddPatientDataDialog},
   // components: { VideoPlayer },
   data() {
     return {
@@ -206,20 +207,19 @@ export default {
   },
   async mounted() {
     // call backend to req data
-    
+
     var tempQueryResults = await DatabaseService.getCase();
-    console.log('0')
-    console.log(tempQueryResults)
-    for (var key in tempQueryResults){
-      console.log('----')
-      console.log(tempQueryResults[key]["patientID"])
-      console.log(this.patientResults._id)
-      console.log('----')
-      if (tempQueryResults[key]["patientID"] === this.patientResults._id){
-        this.queryResults.push(tempQueryResults[key])
-      }
-      else{
-        console.log('aaa')
+    console.log("0");
+    console.log(tempQueryResults);
+    for (var key in tempQueryResults) {
+      console.log("----");
+      console.log(tempQueryResults[key]["patientID"]);
+      console.log(this.patientResults._id);
+      console.log("----");
+      if (tempQueryResults[key]["patientID"] === this.patientResults._id) {
+        this.queryResults.push(tempQueryResults[key]);
+      } else {
+        console.log("aaa");
       }
     }
     console.log(this.queryResults);

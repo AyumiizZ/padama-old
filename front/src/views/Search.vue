@@ -173,8 +173,49 @@
               <td>{{ row.item.regisID }}</td>
               <td>{{ row.item.firstname }}</td>
               <td>{{ row.item.lastname }}</td>
-              <td>{{ row.item.birthDate }}</td>
+              <td>{{ row.item.sex }}</td>
               <td>{{ calAge(row.item.birthDate) }}</td>
+              <td>{{row.item.ud}}</td>
+              <td>{{ row.item.smoking }}</td>
+              <!-- <td>
+                <v-dialog v-model="row.item.dialog" width="500">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                    More Info
+                  </v-btn>
+                </template>
+
+                <v-card>
+                  <v-card-title class="text-h5 grey lighten-2">
+                    Info
+                  </v-card-title>
+
+                  <v-card-text>
+                    <li>
+                      <strong>Underlying Disease: </strong>
+                      {{row.item.ud}}
+                    </li>
+                    <li>
+                      <strong>Smoking: </strong>
+                      {{ row.item.smoking }}
+                    </li>
+                  </v-card-text>
+
+                  <v-divider></v-divider>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="primary"
+                      text
+                      @click="row.item.dialog = false"
+                    >
+                      I accept
+                    </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+              </td> -->
             </tr>
           </router-link>
         </template>
@@ -209,14 +250,27 @@ export default {
           text: "Last Name",
           value: "lastname",
         },
+        // {
+        //   text: "Birth Date",
+        //   value: "birthDate",
+        // },
         {
-          text: "Birth Date",
-          value: "birthDate",
+          text: "Sex",
+          value: "sex",
         },
         {
           text: "Age",
           value: "age",
         },
+        {
+          text: "Underlying Disease",
+          value: "ud",
+        },
+        {
+          text: "Smoke",
+          value: "smoke",
+        },
+        // { text: "", align:"center", value: "attach" },
       ],
       queryResults: [],
       EnableDialog: false,

@@ -157,7 +157,7 @@
             auto-grow
           />
         </v-card-text>
-        <v-card-text v-if="page == 3">
+        <!-- <v-card-text v-if="page == 3">
           <h3>Preoperative</h3>
           <v-file-input
             v-model="preVDO"
@@ -259,34 +259,34 @@
               </v-chip>
             </template>
           </v-file-input>
-        </v-card-text>
+        </v-card-text> -->
         <v-divider></v-divider>
 
         <v-card-actions>
-          <v-btn color="red lighten-1" text @click="addPatientDialog = false">
+          <v-btn color="red lighten-1" text v-if="page ===1" @click="addPatientDialog = false">
             Cancel
           </v-btn>
            <v-btn color="red lighten-1" text v-if="page !== 1" @click="page -= 1;">
             Back
           </v-btn>
-          <v-btn color="red lighten-1" text v-if="page === 1" disabled>
+          <!-- <v-btn color="red lighten-1" text v-if="page === 1" disabled>
             Back
-          </v-btn>
+          </v-btn> -->
           <v-spacer></v-spacer
           ><v-btn color="black lighten-1" text @click="clear()"> Clear </v-btn
           ><v-spacer></v-spacer>
-          <v-btn color=" primary" text disabled v-if="page === 3">
+          <!-- <v-btn color=" primary" text disabled v-if="page === 2">
+            Next
+          </v-btn> -->
+          <v-btn color=" primary" text @click="page += 1; temp()" v-if="page !== 2">
             Next
           </v-btn>
-          <v-btn color=" primary" text @click="page += 1; temp()" v-if="page !== 3">
-            Next
-          </v-btn>
-          <v-btn color=" primary" text @click="submit()" v-if="page === 3 || page === 1">
+          <v-btn color=" primary" text @click="submit()" v-if="page === 2">
             Submit
           </v-btn>
-          <v-btn color=" primary" text disabled v-if="page === 2">
+          <!-- <v-btn color=" primary" text disabled v-if="page === 1">
             Submit
-          </v-btn>
+          </v-btn> -->
         </v-card-actions>
       </v-card>
     </v-dialog>
