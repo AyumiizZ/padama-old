@@ -18,6 +18,8 @@ module.exports = (app) => {
   app.post("/patient", DatabaseController.addPatient);
   app.get("/case", DatabaseController.getCase);
   app.post("/case", DatabaseController.addCase);
+  app.get("/case-list", DatabaseController.getCaseList)
+  // app.get("/query-case", DatabaseController.queryCaseTag)
   // app.post("/upload", (req,res) => {
   //   const { image } = req.body;
   //   // console.log(req.body)

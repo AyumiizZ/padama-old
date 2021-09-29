@@ -526,12 +526,12 @@ export default {
     temp() {
       console.log(this.$route.params._id);
     },
-    parseDiag(diag) {
+    parseDiag (diag) {
       var ret = [];
       for (let i = 0; i < diag.length; i++) {
         ret.push(this.diagnosisItems.indexOf(diag[i]));
       }
-      return ret.sort().join(",");
+      return ret.sort().join(',');
     },
   },
   watch: {

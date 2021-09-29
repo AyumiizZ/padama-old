@@ -97,6 +97,19 @@ module.exports = {
       });
     }
   },
+  async getCaseList(req, res) {
+    try {
+      const patientCase = await Case.findAll({ limit: 10000 });
+      // console.log(patientCase);
+      res.send(patientCase);
+    } catch (err) {
+      // email already exits
+      res.status(500).send({
+        error: "An error has occured trying to fetch the songs",
+      });
+    }
+  },
+  
   async queryCaseTag(req, res) {
     try {
       var diagList = []

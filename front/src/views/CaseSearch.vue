@@ -3,14 +3,30 @@
     <v-card>
       <v-list-item>
         <v-row>
-          <v-col>
-            <v-text-field
-              v-model="RegistrationNo"
-              label="Registration No."
-              outlined
-              clearable
-            />
-          </v-col>
+          <v-combobox
+            v-model="diagnosisModel"
+            :items="diagnosisItems"
+            :search-input.sync="diagnosisSearch"
+            hide-selected
+            hint="Maximum of 5 tags"
+            label="Diagnosis"
+            multiple
+            persistent-hint
+            small-chips
+            close
+            outlined
+          >
+            <template v-slot:no-data>
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    No results matching "<strong>{{ diagnosisSearch }}</strong
+                    >". Press <kbd>enter</kbd> to create a new one
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-combobox>
           <v-col cols="auto">
             <vc-date-picker
               v-model="range"
@@ -172,49 +188,10 @@
               <td>{{ row.item.patientID }}</td>
               <td>{{ row.item.firstname }}</td>
               <td>{{ row.item.lastname }}</td>
-              <td>{{ row.item.sex }}</td>
-              <td>{{ calAge(row.item.birthDate) }}</td>
-              <td>{{ row.item.ud }}</td>
-              <td>{{ row.item.smoking }}</td>
-              <!-- <td>
-                <v-dialog v-model="row.item.dialog" width="500">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                    More Info
-                  </v-btn>
-                </template>
-
-                <v-card>
-                  <v-card-title class="text-h5 grey lighten-2">
-                    Info
-                  </v-card-title>
-
-                  <v-card-text>
-                    <li>
-                      <strong>Underlying Disease: </strong>
-                      {{row.item.ud}}
-                    </li>
-                    <li>
-                      <strong>Smoking: </strong>
-                      {{ row.item.smoking }}
-                    </li>
-                  </v-card-text>
-
-                  <v-divider></v-divider>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="primary"
-                      text
-                      @click="row.item.dialog = false"
-                    >
-                      I accept
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-              </td> -->
+              <td>{{ row.item.id }}</td>
+              <td>{{ parseDiag(row.item.diagnosis) }}</td>
+              <td>{{ row.item.visitDate }}</td>
+              <td>{{ row.item.operativeDate }}</td>
             </tr>
           </router-link>
         </template>
@@ -254,20 +231,21 @@ export default {
         //   value: "birthDate",
         // },
         {
-          text: "Sex",
-          value: "sex",
+          text: "Case ID",
+          value: "id",
+        },
+        
+        {
+          text: "Diagnosis",
+          value: "diagnosis",
         },
         {
-          text: "Age",
-          value: "age",
+          text: "Visited Date",
+          value: "visitDate",
         },
         {
-          text: "Underlying Disease",
-          value: "ud",
-        },
-        {
-          text: "Smoking",
-          value: "smoking",
+          text: "Operative Date",
+          value: "operativeDate",
         },
         // { text: "", align:"center", value: "attach" },
       ],
@@ -275,14 +253,16 @@ export default {
       EnableDialog: false,
       DisbaleDialog: false,
       adminMode: false,
-      // queryResults: [
-      //   {
-      //     _id: "1234567890",
-      //     first: "Harry",
-      //     last: "Potter",
-      //     age: "112",
-      //   },
-      // ],
+      diagnosisItems: [
+        "Unspecified",
+        "Cleft palate",
+        "Cleft hard and soft palate with cleft lip",
+        "Cleft soft palate",
+        "Cleft lip",
+        "Cleft hard palate",
+      ],
+      diagnosisModel: [],
+      diagnosisSearch: null,
     };
   },
   methods: {
@@ -304,15 +284,40 @@ export default {
       return age;
     },
     queryPatient: async function () {
-      this.queryResults = await DatabaseService.queryPatient({
-        _id: this.RegistrationNo,
+      console.log(this.parseDiag2(this.diagnosisModel))
+      this.queryResults = await DatabaseService.queryCase({
+        taglist: this.parseDiag2(this.diagnosisModel)
       });
+      console.log(this.queryResults)
+    },
+    parseDiag: function(diag){
+      // var diagnosisItems = [
+      //   "Unspecified",
+      //   "Cleft palate",
+      //   "Cleft hard and soft palate with cleft lip",
+      //   "Cleft soft palate",
+      //   "Cleft lip",
+      //   "Cleft hard palate",
+      // ]
+        var ret = [];
+        var diagList = diag.split(',')
+      for (let i = 0; i < diagList.length; i++) {
+        ret.push(this.diagnosisItems[diagList[i]]);
+      }
+      return ret.sort();
+    },
+    parseDiag2 (diag) {
+      var ret = [];
+      for (let i = 0; i < diag.length; i++) {
+        ret.push(this.diagnosisItems.indexOf(diag[i]));
+      }
+      return ret.sort();
     },
   },
   async mounted() {
     // call backend to req data
     console.log(this.queryResults);
-    this.queryResults = await DatabaseService.getAllPatient();
+    this.queryResults = await DatabaseService.getCaseList();
     console.log("1234");
     console.log(this.queryResults);
   },
