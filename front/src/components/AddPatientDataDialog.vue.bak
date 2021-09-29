@@ -29,11 +29,14 @@
             <template v-slot="{ inputValue, inputEvents }">
               <v-text-field
                 readonly
+                :error-messages="visitedDateErrors"
                 label="Visit Date"
                 :value="inputValue"
                 v-on="inputEvents"
                 outlined
                 required
+                @input="$v.visitedDate.$touch()"
+                @blur="$v.visitedDate.$touch()"
               ></v-text-field>
             </template>
           </vc-date-picker>
@@ -61,30 +64,23 @@
               </v-list-item>
             </template>
           </v-combobox>
-          <v-select
-            v-model="type"
-            :items="typeItems"
-            label="Type"
-            outlined
-          ></v-select>
+          <v-select :items="typeItems" label="Type" outlined></v-select>
           <v-row>
             <v-col cols="6">
               <v-text-field
                 v-model="onset"
+                :error-messages="onsetErrors"
                 :counter="10"
                 label="Onset"
                 outlined
                 required
+                @input="$v.onset.$touch()"
+                @blur="$v.onset.$touch()"
               >
               </v-text-field>
             </v-col>
             <v-col cols="6">
-              <v-select
-                v-model="onsetSuffix"
-                :items="onsetItems"
-                label="Type"
-                outlined
-              ></v-select>
+              <v-select :items="onsetItems" label="Type" outlined></v-select>
             </v-col>
             <v-col cols="12">
               <v-textarea
@@ -103,28 +99,24 @@
         </v-card-text>
         <v-card-text v-if="page == 2">
           <v-checkbox v-model="noneOperation" label="None"></v-checkbox>
-          <v-text-field
-            v-if="!noneOperation"
-            v-model="operation"
-            label="Operation"
-            outlined
-            required
-          >
+          <v-text-field v-model="operation" label="Operation" outlined required>
           </v-text-field>
-          <vc-date-picker v-model="operativeDate" v-if="!noneOperation">
+          <vc-date-picker v-model="operativeDate">
             <template v-slot="{ inputValue, inputEvents }">
               <v-text-field
                 readonly
+                :error-messages="operativeDateErrors"
                 label="Operative Date"
                 :value="inputValue"
                 v-on="inputEvents"
                 outlined
                 required
+                @input="$v.visitedDate.$touch()"
+                @blur="$v.visitedDate.$touch()"
               ></v-text-field>
             </template>
           </vc-date-picker>
           <v-textarea
-            v-if="!noneOperation"
             v-model="operativeNote"
             outlined
             clearable
@@ -135,7 +127,6 @@
             auto-grow
           />
           <v-text-field
-            v-if="!noneOperation"
             v-model="bloodLoss"
             label="Blood Loss"
             suffix="mL"
@@ -143,7 +134,6 @@
             required
           />
           <v-text-field
-            v-if="!noneOperation"
             v-model="operativeTime"
             label="Operative Time"
             suffix="min"
@@ -151,7 +141,6 @@
             required
           />
           <v-text-field
-            v-if="!noneOperation"
             v-model="complication"
             label="Complication"
             outlined
@@ -274,20 +263,10 @@
         <v-divider></v-divider>
 
         <v-card-actions>
-          <v-btn
-            color="red lighten-1"
-            text
-            v-if="page === 1"
-            @click="addPatientDialog = false"
-          >
+          <v-btn color="red lighten-1" text v-if="page ===1" @click="addPatientDialog = false">
             Cancel
           </v-btn>
-          <v-btn
-            color="red lighten-1"
-            text
-            v-if="page !== 1"
-            @click="page -= 1"
-          >
+           <v-btn color="red lighten-1" text v-if="page !== 1" @click="page -= 1;">
             Back
           </v-btn>
           <!-- <v-btn color="red lighten-1" text v-if="page === 1" disabled>
@@ -299,15 +278,7 @@
           <!-- <v-btn color=" primary" text disabled v-if="page === 2">
             Next
           </v-btn> -->
-          <v-btn
-            color=" primary"
-            text
-            @click="
-              page += 1;
-              temp();
-            "
-            v-if="page !== 2"
-          >
+          <v-btn color=" primary" text @click="page += 1; temp()" v-if="page !== 2">
             Next
           </v-btn>
           <v-btn color=" primary" text @click="submit()" v-if="page === 2">
@@ -376,7 +347,7 @@ export default {
       firstname: null,
       lastname: null,
       visitedDate: null,
-      operativeDate: "",
+      operativeDate: '',
       diagnosisItems: [
         "Unspecified",
         "Cleft palate",
@@ -400,14 +371,12 @@ export default {
       postPhoto: [],
       page: 1,
       caseID: null,
-      operativeNote: "",
-      bloodLoss: "",
-      operativeTime: "",
-      complication: "",
-      operativeOthers: "",
-      operation: "",
-      onsetSuffix: null,
-      type: null,
+      operativeNote: '',
+      bloodLoss: '',
+      operativeTime: '',
+      complication: '',
+      operativeOthers: '',
+      operation: ''
       // regisIDRules: [(v) => v.length <= 10 || "10 Digits only"],
     };
   },
@@ -473,36 +442,20 @@ export default {
     },
     async createPatient() {
       try {
-        var caseBody;
-        console.log(this.noneOperation);
-        if (this.noneOperation === true) {
-          caseBody = {
-            patientID: this.$route.params._id,
-            visitDate: this.visitedDate,
-            diagnosis: this.parseDiag(this.diagnosisModel),
-            type: this.type,
-            onset: [this.onset, this.onsetSuffix].join(" "),
-            phyExam: this.phyExam,
-            other: this.operativeOthers,
-          };
-        } else {
-          caseBody = {
-            patientID: this.$route.params._id,
-            visitDate: this.visitedDate,
-            diagnosis: this.parseDiag(this.diagnosisModel),
-            type: this.type,
-            onset: [this.onset, this.onsetSuffix].join(" "),
-            phyExam: this.phyExam,
-            operation: this.operation,
-            operativeDate: this.operativeDate,
-            operativeNote: this.operativeNote,
-            bloodloss: this.bloodLoss,
-            operativeTime: this.operativeTime,
-            complication: this.complication,
-            other: this.operativeOthers,
-          };
-        }
-        console.log(caseBody);
+        console.log({
+          patientID: this.$route.params._id,
+          visitDate: this.visitedDate,
+          diagnosis: this.diagnosisModel,
+          // type: DataTypes.STRING,
+          // onset: DataTypes.STRING,
+          phyExam: this.phyExam,
+          // operation: DataTypes.STRING,
+          // operativeDate: DataTypes.DATE,
+          // bloodloss: DataTypes.FLOAT,
+          // operativeTime: DataTypes.FLOAT,
+          // complication: DataTypes.STRING,
+          // other: DataTypes.STRING,
+        })
         await DatabaseService.addCase({
           // caseID: this.caseID,
           patientID: this.$route.params._id,
@@ -530,15 +483,8 @@ export default {
       }
     },
     temp() {
-      console.log(this.$route.params._id);
-    },
-    parseDiag(diag) {
-      var ret = [];
-      for (let i = 0; i < diag.length; i++) {
-        ret.push(this.diagnosisItems.indexOf(diag[i]));
-      }
-      return ret.sort().join(",");
-    },
+      console.log(this.$route.params._id)
+    }
   },
   watch: {
     diagnosisModel(val) {
