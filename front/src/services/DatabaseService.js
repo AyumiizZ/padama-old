@@ -3,7 +3,14 @@ import API from "@/services/Api.js";
 export default {
   getAllPatient() {
     return API()
-      .get("patient")
+      .get("patientList")
+      .then((result) => {
+        return result.data;
+      });
+  },
+  getPatient(patientID) {
+    return API()
+      .get("patient", {params:patientID})
       .then((result) => {
         return result.data;
       });
@@ -14,7 +21,7 @@ export default {
   getCase(patientID) {
     console.log(patientID)
     return API()
-      .get("case")
+      .get("case", {params:patientID})
       .then((result) => {
         return result.data;
       });

@@ -15,10 +15,24 @@ const { v4: uuidv4 } = require('uuid');
 // }
 module.exports = {
 
+  async getPatientList(req, res) {
+    try {
+      const patient = await Patient.findAll({ limit: 10000 });
+      // console.log(patient);
+      res.send(patient);
+    } catch (err) {
+      // email already exits
+      res.status(500).send({
+        error: "An error has occured trying to fetch the songs",
+      });
+    }
+  },
   async getPatient(req, res) {
     try {
-      const patient = await Patient.findAll({ limit: 1000 });
-      console.log(patient);
+      const patient = await Patient.findAll({where: {
+        patientID: req.query._id
+      }});
+      // console.log(patient);
       res.send(patient);
     } catch (err) {
       // email already exits
@@ -52,19 +66,15 @@ module.exports = {
   },
   async getCase(req, res) {
     try {
-      const patientCase = await Case.findAll({ limit: 1000 });
-      // const patientCase = await Case.findAll({
-      //   attributes: [
-      //     'UserID',
-      //     [db.sequelize.fn('SUM', db.sequelize.col('score')), 'score']
-      //   ],
-      //   include: [{
-      //     model: db.User,
-      //     required: true,
-      //     attributes: ['username']
-      //   }],
-      //   group: ['UserID']});
-      console.log(patientCase);
+      console.log('---')
+      console.log(req.query)
+      console.log('---')
+      const patientCase = await Case.findAll({
+        where: {
+          patientID: req.query._id
+        }
+      });
+      // console.log(patientCase);
       res.send(patientCase);
     } catch (err) {
       // email already exits

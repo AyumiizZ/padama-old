@@ -2,7 +2,7 @@ const AuthenticationController = require("./controllers/AuthenticationController
 const AuthenticationControllerPolicy = require("./policies/AuthenticationControllerPolicy");
 const DatabaseController = require("./controllers/DatabaseController");
 const base64Img = require('base64-img');
-const path = require('path')
+const path = require('path');
 
 module.exports = (app) => {
   app.post(
@@ -11,7 +11,8 @@ module.exports = (app) => {
     AuthenticationController.register
   );
   app.post("/login", AuthenticationController.login);
-  app.get("/patient", DatabaseController.getPatient);
+  app.get("/patientList", DatabaseController.getPatientList);
+  app.get("/patient", DatabaseController.getPatient)
   app.post("/patient", DatabaseController.addPatient);
   app.get("/case", DatabaseController.getCase);
   app.post("/case", DatabaseController.addCase);

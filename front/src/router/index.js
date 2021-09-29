@@ -56,6 +56,7 @@ const routes = [
     path: "/patient/:_id",
     name: "Patient",
     component: Patient,
+    props: true,
     meta: {
       requiresAuth: true,
     },

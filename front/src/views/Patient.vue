@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card>
-      <h1>{{ patientResults._id }} Harry Potter</h1>
+      <h1>{{ patientResults._id }} Harry Potter {{patientInfo}}</h1>
       <v-list-item>
         <v-row>
           <v-col>
@@ -75,9 +75,11 @@
         <template v-slot:item="row">
           <tr>
             <td>{{ row.item.visitDate }}</td>
-            <td>{{ patientResults._id }}</td>
-            <td>{{ patientResults.first }}</td>
-            <td>{{ patientResults.last }}</td>
+            <td>{{ row.item.id }}</td>
+            <td>{{row.item.diagnosis}}</td>
+            <td>{{row.item.type}}</td>
+            <!-- <td>{{ patientResults.first }}</td>
+            <td>{{ patientResults.last }}</td> -->
             <td>{{ patientResults.age }}</td>
             <td>
               <router-link
@@ -110,7 +112,7 @@
                   <v-card-text>
                     <li>
                       <strong>Diagnosis: </strong>
-                      {{ row.item.diagnosis }}
+                      {{ parseDiag(row.item.diagnosis) }}
                     </li>
                     <li>
                       {{ row.item.visitDate }}
@@ -147,6 +149,7 @@ export default {
   // components: { VideoPlayer },
   data() {
     return {
+      patientInfo: null,
       expanded: [],
       singleExpand: false,
       caseID: null,
@@ -165,7 +168,7 @@ export default {
         },
         {
           text: "Case No.",
-          value: "_id",
+          value: "id",
         },
         {
           text: "First Name",
@@ -188,6 +191,14 @@ export default {
         age: "112",
       },
       queryResults: [],
+      diagnosisItems: [
+        "Unspecified",
+        "Cleft palate",
+        "Cleft hard and soft palate with cleft lip",
+        "Cleft soft palate",
+        "Cleft lip",
+        "Cleft hard palate",
+      ],
     };
   },
   methods: {
@@ -204,25 +215,44 @@ export default {
       }
       return age;
     },
+    parseDiag: function(diag){
+      // var diagnosisItems = [
+      //   "Unspecified",
+      //   "Cleft palate",
+      //   "Cleft hard and soft palate with cleft lip",
+      //   "Cleft soft palate",
+      //   "Cleft lip",
+      //   "Cleft hard palate",
+      // ]
+        var ret = [];
+      for (let i = 0; i < diag.length; i++) {
+        ret.push(this.diagnosisItems[diag[i]]);
+      }
+      return ret.sort();
+    }
   },
   async mounted() {
+    // this.diagnosisItems =
     // call backend to req data
 
-    var tempQueryResults = await DatabaseService.getCase();
-    console.log("0");
-    console.log(tempQueryResults);
-    for (var key in tempQueryResults) {
-      console.log("----");
-      console.log(tempQueryResults[key]["patientID"]);
-      console.log(this.patientResults._id);
-      console.log("----");
-      if (tempQueryResults[key]["patientID"] === this.patientResults._id) {
-        this.queryResults.push(tempQueryResults[key]);
-      } else {
-        console.log("aaa");
-      }
-    }
+    // var tempQueryResults = ;
+    // console.log("0");
+    // console.log(tempQueryResults);
+    // for (var key in tempQueryResults) {
+    //   // console.log("----");
+    //   // console.log(tempQueryResults[key]["patientID"]);
+    //   // console.log(this.patientResults._id);
+    //   // console.log("----");
+    //   if (tempQueryResults[key]["patientID"] === this.patientResults._id) {
+    //     this.queryResults.push(tempQueryResults[key]);
+    //   } else {
+    //     console.log("aaa");
+    //   }
+    // }
+    // 
+    this.queryResults = await DatabaseService.getCase({_id: this.$route.params._id})
     console.log(this.queryResults);
+    this.patientInfo = await DatabaseService.getPatient({_id: this.$route.params._id})
     this.queryResults.dialog = false;
   },
 };

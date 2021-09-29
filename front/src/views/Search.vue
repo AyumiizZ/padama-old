@@ -167,7 +167,7 @@
           <router-link
             custom
             v-slot="{ navigate }"
-            :to="{ name: 'Patient', params: { _id: row.item.patientID } }"
+            :to="{ name: 'Patient', params: { _id: row.item.patientID} }"
           >
             <tr @click="navigate">
               <td>{{ row.item.patientID }}</td>
