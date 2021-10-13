@@ -1,7 +1,11 @@
 <template>
   <div>
     <v-card>
-      <h1>{{ patientResults._id }} Harry Potter {{patientInfo}}</h1>
+      <h1> {{pid}} {{name}} </h1>
+      <!-- <h1>{{patientInfo.patientID}} {{patientInfo.firstname}} {{patientInfo.lastname}}</h1> -->
+      <!-- <h1 ref="header"> test</h1> -->
+      <!-- <h2>{{patientInfo.birthDate}} {{patientInfo.sex}}</h2>
+      <h2>{{patientInfo.ud}} {{patientInfo.smoking}}</h2> -->
       <v-list-item>
         <v-row>
           <v-col>
@@ -115,6 +119,9 @@
                       {{ parseDiag(row.item.diagnosis) }}
                     </li>
                     <li>
+                      asdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasddddddddddddddddddddddddddddddddddddddddddddddddddddd
+                    </li>
+                    <li>
                       {{ row.item.visitDate }}
                     </li>
                   </v-card-text>
@@ -149,6 +156,8 @@ export default {
   // components: { VideoPlayer },
   data() {
     return {
+      pid: null,
+      name: 'testt',
       patientInfo: null,
       expanded: [],
       singleExpand: false,
@@ -232,28 +241,18 @@ export default {
     },
   },
   async mounted() {
-    // this.diagnosisItems =
-    // call backend to req data
-
-    // var tempQueryResults = ;
-    // console.log("0");
-    // console.log(tempQueryResults);
-    // for (var key in tempQueryResults) {
-    //   // console.log("----");
-    //   // console.log(tempQueryResults[key]["patientID"]);
-    //   // console.log(this.patientResults._id);
-    //   // console.log("----");
-    //   if (tempQueryResults[key]["patientID"] === this.patientResults._id) {
-    //     this.queryResults.push(tempQueryResults[key]);
-    //   } else {
-    //     console.log("aaa");
-    //   }
-    // }
-    // 
     this.queryResults = await DatabaseService.getCase({_id: this.$route.params._id})
     console.log(this.queryResults);
-    this.patientInfo = await DatabaseService.getPatient({_id: this.$route.params._id})
+    var that = this
+    this.patientInfo = await DatabaseService.getPatient({_id: this.$route.params._id}).then(function(data) {
+      that.name = 'google'
+      that.pid = data[0].patientID
+      return data
+    })
+    console.log(this.name)
+    console.log(this.patientInfo)
     this.queryResults.dialog = false;
+
   },
 };
 </script>

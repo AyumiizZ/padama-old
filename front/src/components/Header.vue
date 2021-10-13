@@ -15,8 +15,18 @@
     <v-spacer></v-spacer>
 
     <v-toolbar-items>
+      <v-btn icon @click="darkmode">
+        <v-icon v-if="!this.$vuetify.theme.dark" color="grey lighten-1"
+          >mdi-moon-waning-crescent</v-icon
+        >
+        <v-icon v-if="this.$vuetify.theme.dark" color="grey lighten-1"
+          >mdi-white-balance-sunny</v-icon
+        >
+      </v-btn>
       <v-btn to="/login" v-if="!$store.state.isUserLoggedIn"> Login </v-btn>
-      <v-btn to="/register" v-if="!$store.state.isUserLoggedIn"> Sign-Up </v-btn>
+      <v-btn to="/register" v-if="!$store.state.isUserLoggedIn">
+        Sign-Up
+      </v-btn>
       <v-btn @click="logout" v-if="$store.state.isUserLoggedIn"> Logout</v-btn>
     </v-toolbar-items>
   </v-app-bar>
@@ -25,11 +35,14 @@
 <script>
 export default {
   methods: {
-    logout () {
-      this.$store.dispatch('setToken', null)
-      this.$store.dispatch('setUser', null)
-      this.$router.push({name: 'Home'})
-    }
+    logout() {
+      this.$store.dispatch("setToken", null);
+      this.$store.dispatch("setUser", null);
+      this.$router.push({ name: "Home" });
+    },
+    darkmode() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    },
   },
 };
 </script>
