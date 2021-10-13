@@ -1,11 +1,7 @@
 <template>
   <div>
     <v-card>
-      <h1> {{pid}} {{name}} </h1>
-      <!-- <h1>{{patientInfo.patientID}} {{patientInfo.firstname}} {{patientInfo.lastname}}</h1> -->
-      <!-- <h1 ref="header"> test</h1> -->
-      <!-- <h2>{{patientInfo.birthDate}} {{patientInfo.sex}}</h2>
-      <h2>{{patientInfo.ud}} {{patientInfo.smoking}}</h2> -->
+      <patient-header v-bind:pid="this.$route.params._id"></patient-header>
       <v-list-item>
         <v-row>
           <v-col>
@@ -151,14 +147,12 @@
 <script>
 import DatabaseService from "@/services/DatabaseService";
 import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
+import PatientHeader from '../components/patientHeader.vue';
 export default {
-  components: { AddPatientDataDialog},
+  components: { AddPatientDataDialog, PatientHeader},
   // components: { VideoPlayer },
   data() {
     return {
-      pid: null,
-      name: 'testt',
-      patientInfo: null,
       expanded: [],
       singleExpand: false,
       caseID: null,
@@ -225,14 +219,6 @@ export default {
       return age;
     },
     parseDiag: function(diag){
-      // var diagnosisItems = [
-      //   "Unspecified",
-      //   "Cleft palate",
-      //   "Cleft hard and soft palate with cleft lip",
-      //   "Cleft soft palate",
-      //   "Cleft lip",
-      //   "Cleft hard palate",
-      // ]
         var ret = [];
       for (let i = 0; i < diag.length; i++) {
         ret.push(this.diagnosisItems[diag[i]]);
@@ -243,14 +229,6 @@ export default {
   async mounted() {
     this.queryResults = await DatabaseService.getCase({_id: this.$route.params._id})
     console.log(this.queryResults);
-    var that = this
-    this.patientInfo = await DatabaseService.getPatient({_id: this.$route.params._id}).then(function(data) {
-      that.name = 'google'
-      that.pid = data[0].patientID
-      return data
-    })
-    console.log(this.name)
-    console.log(this.patientInfo)
     this.queryResults.dialog = false;
 
   },
