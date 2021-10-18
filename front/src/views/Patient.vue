@@ -64,6 +64,10 @@
       <v-card-title>
         Queries History
         <v-spacer></v-spacer>
+        <router-link
+          :to="{ name: 'addCase', params: { _id: patientResults._id, firstname: patientResults.firstname, lastname: patientResults.lastname } }"
+          ><v-btn>Show PDF</v-btn>
+        </router-link>
         <add-patient-data-dialog></add-patient-data-dialog>
       </v-card-title>
       <v-data-table
@@ -76,8 +80,8 @@
           <tr>
             <td>{{ row.item.visitDate }}</td>
             <td>{{ row.item.id }}</td>
-            <td>{{row.item.diagnosis}}</td>
-            <td>{{row.item.type}}</td>
+            <td>{{ row.item.diagnosis }}</td>
+            <td>{{ row.item.type }}</td>
             <!-- <td>{{ patientResults.first }}</td>
             <td>{{ patientResults.last }}</td> -->
             <td>{{ patientResults.age }}</td>
@@ -147,9 +151,9 @@
 <script>
 import DatabaseService from "@/services/DatabaseService";
 import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
-import PatientHeader from '../components/patientHeader.vue';
+import PatientHeader from "../components/patientHeader.vue";
 export default {
-  components: { AddPatientDataDialog, PatientHeader},
+  components: { AddPatientDataDialog, PatientHeader },
   // components: { VideoPlayer },
   data() {
     return {
@@ -218,8 +222,8 @@ export default {
       }
       return age;
     },
-    parseDiag: function(diag){
-        var ret = [];
+    parseDiag: function (diag) {
+      var ret = [];
       for (let i = 0; i < diag.length; i++) {
         ret.push(this.diagnosisItems[diag[i]]);
       }
@@ -227,10 +231,11 @@ export default {
     },
   },
   async mounted() {
-    this.queryResults = await DatabaseService.getCase({_id: this.$route.params._id})
+    this.queryResults = await DatabaseService.getCase({
+      _id: this.$route.params._id,
+    });
     console.log(this.queryResults);
     this.queryResults.dialog = false;
-
   },
 };
 </script>
