@@ -66,9 +66,9 @@
         <v-spacer></v-spacer>
         <router-link
           :to="{ name: 'addCase', params: { _id: patientResults._id, firstname: patientResults.firstname, lastname: patientResults.lastname } }"
-          ><v-btn>Show PDF</v-btn>
+          ><v-btn>Add Case</v-btn>
         </router-link>
-        <add-patient-data-dialog></add-patient-data-dialog>
+        <!-- <add-patient-data-dialog></add-patient-data-dialog> -->
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -150,10 +150,10 @@
 
 <script>
 import DatabaseService from "@/services/DatabaseService";
-import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
+// import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
 import PatientHeader from "../components/patientHeader.vue";
 export default {
-  components: { AddPatientDataDialog, PatientHeader },
+  components: {PatientHeader },
   // components: { VideoPlayer },
   data() {
     return {
