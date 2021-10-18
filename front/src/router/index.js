@@ -9,6 +9,7 @@ import Vdo from "@/views/Vdo";
 import Pdf from "@/views/Pdf";
 import Pic from "@/views/Pic";
 import CaseSearch from "@/views/CaseSearch";
+import AddCase from "@/views/AddCase"
 import PageNotFound from "@/views/PageNotFound";
 import store from "../store";
 
@@ -90,6 +91,14 @@ const routes = [
     path: "/pic/:_id",
     name: "Pic",
     component: Pic,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/add-case",
+    name: "addCase",
+    component: AddCase,
     meta: {
       requiresAuth: true,
     },
