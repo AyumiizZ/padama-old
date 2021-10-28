@@ -33,6 +33,7 @@ module.exports = {
       const patient = await Patient.findAll({where: {
         patientID: req.query._id
       }});
+
       // console.log(patient);
       res.send(patient);
     } catch (err) {

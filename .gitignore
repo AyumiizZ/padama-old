@@ -23,6 +23,7 @@ pnpm-debug.log*
 *.sw?
 
 config.js
+config.js.*
 
 *.mp4
 back/src/public/*

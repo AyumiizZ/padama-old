@@ -66,9 +66,9 @@
         <v-spacer></v-spacer>
         <router-link
           :to="{ name: 'addCase', params: { _id: patientResults._id, firstname: patientResults.firstname, lastname: patientResults.lastname } }"
-          ><v-btn>Show PDF</v-btn>
+          ><v-btn>Add Case</v-btn>
         </router-link>
-        <add-patient-data-dialog></add-patient-data-dialog>
+        <!-- <add-patient-data-dialog></add-patient-data-dialog> -->
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -78,12 +78,10 @@
       >
         <template v-slot:item="row">
           <tr>
-            <td>{{ row.item.visitDate }}</td>
+            <td>{{ parseDate(row.item.visitDate) }}</td>
             <td>{{ row.item.id }}</td>
             <td>{{ row.item.diagnosis }}</td>
             <td>{{ row.item.type }}</td>
-            <!-- <td>{{ patientResults.first }}</td>
-            <td>{{ patientResults.last }}</td> -->
             <td>{{ patientResults.age }}</td>
             <td>
               <router-link
@@ -150,10 +148,11 @@
 
 <script>
 import DatabaseService from "@/services/DatabaseService";
-import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
+// import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
 import PatientHeader from "../components/patientHeader.vue";
 export default {
-  components: { AddPatientDataDialog, PatientHeader },
+  name: 'patient',
+  components: {PatientHeader },
   // components: { VideoPlayer },
   data() {
     return {
@@ -229,11 +228,24 @@ export default {
       }
       return ret.sort();
     },
+    parseDate(date){
+      var dmy = date.split('T')[0]
+      var time = date.split('T')[1].split('.')[0]
+      
+      return dmy + ' ' + time
+    }
   },
   async mounted() {
     this.queryResults = await DatabaseService.getCase({
       _id: this.$route.params._id,
     });
+    // await DatabaseService.getPatient({_id: this.pid}).then(function(data) {
+    //         that.firstname = data[0].firstname 
+    //         that.lastname = data[0].lastname
+    //         that.sex = data[0].sex
+    //         that.ud = data[0].ud
+    //         that.smoking = data[0].smoking
+    //     })
     console.log(this.queryResults);
     this.queryResults.dialog = false;
   },

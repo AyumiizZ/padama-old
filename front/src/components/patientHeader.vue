@@ -24,9 +24,9 @@ export default {
     },
     async mounted() {
         var that = this
-        console.log(this.pid)
         await DatabaseService.getPatient({_id: this.pid}).then(function(data) {
-            that.name = data[0].firstname + ' ' + data[0].lastname
+            that.firstname = data[0].firstname 
+            that.lastname = data[0].lastname
             that.sex = data[0].sex
             that.ud = data[0].ud
             that.smoking = data[0].smoking

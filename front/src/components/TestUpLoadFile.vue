@@ -49,9 +49,6 @@ export default {
         const response = await DatabaseService.upload({
           image: this.image
         });
-        // this.error = "";
-        // this.$store.dispatch("setToken", response.data.token);
-        // this.$store.dispatch("setUser", response.data.user);
         console.log('ret link')
         console.log(response.data.url)
       } catch (err) {

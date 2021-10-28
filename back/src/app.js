@@ -18,6 +18,6 @@ require('./routes')(app)
 // sequelize.sync({force: true})
 sequelize.sync()
     .then(() => {
-        app.listen(config.port || 8081)
+        app.listen(config.port || 8081, config.hostname || '127.0.0.1')
     })
 // app.listen(process.env.PORT || 8081)
