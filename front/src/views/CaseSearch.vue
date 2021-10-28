@@ -189,9 +189,18 @@
               <td>{{ row.item.firstname }}</td>
               <td>{{ row.item.lastname }}</td>
               <td>{{ row.item.id }}</td>
-              <td>{{ parseDiag(row.item.diagnosis) }}</td>
-              <td>{{ row.item.visitDate }}</td>
-              <td>{{ row.item.operativeDate }}</td>
+              <!-- <td>{{ parseDiag(row.item.diagnosis) }}</td> -->
+              <td >
+                <!-- {{ parseDiag(row.item.diagnosis) }} -->
+                <v-chip
+                  v-for="item in parseDiag(row.item.diagnosis)"
+                  :key="item.index"
+                >
+                  {{ item }}
+                </v-chip>
+              </td>
+              <td>{{ parseDate(row.item.visitDate) }}</td>
+              <td>{{ parseDate(row.item.operativeDate) }}</td>
             </tr>
           </router-link>
         </template>
@@ -226,15 +235,11 @@ export default {
           text: "Last Name",
           value: "lastname",
         },
-        // {
-        //   text: "Birth Date",
-        //   value: "birthDate",
-        // },
         {
           text: "Case ID",
           value: "id",
         },
-        
+
         {
           text: "Diagnosis",
           value: "diagnosis",
@@ -247,7 +252,6 @@ export default {
           text: "Operative Date",
           value: "operativeDate",
         },
-        // { text: "", align:"center", value: "attach" },
       ],
       queryResults: [],
       EnableDialog: false,
@@ -284,35 +288,34 @@ export default {
       return age;
     },
     queryPatient: async function () {
-      console.log(this.parseDiag2(this.diagnosisModel))
+      console.log(this.parseDiag2(this.diagnosisModel));
       this.queryResults = await DatabaseService.queryCase({
-        taglist: this.parseDiag2(this.diagnosisModel)
+        taglist: this.parseDiag2(this.diagnosisModel),
       });
-      console.log(this.queryResults)
+      console.log(this.queryResults);
     },
-    parseDiag: function(diag){
-      // var diagnosisItems = [
-      //   "Unspecified",
-      //   "Cleft palate",
-      //   "Cleft hard and soft palate with cleft lip",
-      //   "Cleft soft palate",
-      //   "Cleft lip",
-      //   "Cleft hard palate",
-      // ]
-        var ret = [];
-        var diagList = diag.split(',')
+    parseDiag: function (diag) {
+      var ret = [];
+      var diagList = diag.split(",");
       for (let i = 0; i < diagList.length; i++) {
-        ret.push(this.diagnosisItems[diagList[i]]);
+        if(this.diagnosisItems[diagList[i]] != undefined){
+        ret.push(this.diagnosisItems[diagList[i]]);}
       }
       return ret.sort();
     },
-    parseDiag2 (diag) {
+    parseDiag2(diag) {
       var ret = [];
       for (let i = 0; i < diag.length; i++) {
         ret.push(this.diagnosisItems.indexOf(diag[i]));
       }
       return ret.sort();
     },
+    parseDate(date){
+      var dmy = date.split('T')[0]
+      var time = date.split('T')[1].split('.')[0]
+      
+      return dmy + ' ' + time
+    }
   },
   async mounted() {
     // call backend to req data

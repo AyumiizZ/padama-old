@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card>
-      <h1>{{ patientResults._id }} Harry Potter {{patientInfo}}</h1>
+      <patient-header v-bind:pid="this.$route.params._id"></patient-header>
       <v-list-item>
         <v-row>
           <v-col>
@@ -64,7 +64,11 @@
       <v-card-title>
         Queries History
         <v-spacer></v-spacer>
-        <add-patient-data-dialog></add-patient-data-dialog>
+        <router-link
+          :to="{ name: 'addCase', params: { _id: patientResults._id, firstname: patientResults.firstname, lastname: patientResults.lastname } }"
+          ><v-btn>Add Case</v-btn>
+        </router-link>
+        <!-- <add-patient-data-dialog></add-patient-data-dialog> -->
       </v-card-title>
       <v-data-table
         :headers="headers"
@@ -74,12 +78,10 @@
       >
         <template v-slot:item="row">
           <tr>
-            <td>{{ row.item.visitDate }}</td>
+            <td>{{ parseDate(row.item.visitDate) }}</td>
             <td>{{ row.item.id }}</td>
-            <td>{{row.item.diagnosis}}</td>
-            <td>{{row.item.type}}</td>
-            <!-- <td>{{ patientResults.first }}</td>
-            <td>{{ patientResults.last }}</td> -->
+            <td>{{ row.item.diagnosis }}</td>
+            <td>{{ row.item.type }}</td>
             <td>{{ patientResults.age }}</td>
             <td>
               <router-link
@@ -115,6 +117,9 @@
                       {{ parseDiag(row.item.diagnosis) }}
                     </li>
                     <li>
+                      asdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasdddddddddddddddddddddddddddddddddddddddddddddddddddddasddddddddddddddddddddddddddddddddddddddddddddddddddddd
+                    </li>
+                    <li>
                       {{ row.item.visitDate }}
                     </li>
                   </v-card-text>
@@ -143,13 +148,14 @@
 
 <script>
 import DatabaseService from "@/services/DatabaseService";
-import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
+// import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
+import PatientHeader from "../components/patientHeader.vue";
 export default {
-  components: { AddPatientDataDialog},
+  name: 'patient',
+  components: {PatientHeader },
   // components: { VideoPlayer },
   data() {
     return {
-      patientInfo: null,
       expanded: [],
       singleExpand: false,
       caseID: null,
@@ -215,44 +221,32 @@ export default {
       }
       return age;
     },
-    parseDiag: function(diag){
-      // var diagnosisItems = [
-      //   "Unspecified",
-      //   "Cleft palate",
-      //   "Cleft hard and soft palate with cleft lip",
-      //   "Cleft soft palate",
-      //   "Cleft lip",
-      //   "Cleft hard palate",
-      // ]
-        var ret = [];
+    parseDiag: function (diag) {
+      var ret = [];
       for (let i = 0; i < diag.length; i++) {
         ret.push(this.diagnosisItems[diag[i]]);
       }
       return ret.sort();
     },
+    parseDate(date){
+      var dmy = date.split('T')[0]
+      var time = date.split('T')[1].split('.')[0]
+      
+      return dmy + ' ' + time
+    }
   },
   async mounted() {
-    // this.diagnosisItems =
-    // call backend to req data
-
-    // var tempQueryResults = ;
-    // console.log("0");
-    // console.log(tempQueryResults);
-    // for (var key in tempQueryResults) {
-    //   // console.log("----");
-    //   // console.log(tempQueryResults[key]["patientID"]);
-    //   // console.log(this.patientResults._id);
-    //   // console.log("----");
-    //   if (tempQueryResults[key]["patientID"] === this.patientResults._id) {
-    //     this.queryResults.push(tempQueryResults[key]);
-    //   } else {
-    //     console.log("aaa");
-    //   }
-    // }
-    // 
-    this.queryResults = await DatabaseService.getCase({_id: this.$route.params._id})
+    this.queryResults = await DatabaseService.getCase({
+      _id: this.$route.params._id,
+    });
+    // await DatabaseService.getPatient({_id: this.pid}).then(function(data) {
+    //         that.firstname = data[0].firstname 
+    //         that.lastname = data[0].lastname
+    //         that.sex = data[0].sex
+    //         that.ud = data[0].ud
+    //         that.smoking = data[0].smoking
+    //     })
     console.log(this.queryResults);
-    this.patientInfo = await DatabaseService.getPatient({_id: this.$route.params._id})
     this.queryResults.dialog = false;
   },
 };

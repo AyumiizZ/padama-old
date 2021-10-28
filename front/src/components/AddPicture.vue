@@ -70,9 +70,11 @@ export default {
       console.log(this.image);
     },
     async handleImage() {
+      var that = this;
       for (let i = 0; i < this.photo.length; i++) {
-        await this.createBase64Image(this.photo[i]);
-        await this.upload();
+        await this.createBase64Image(this.photo[i]).then(function(){
+          that.upload();
+        });
       }
       this.dialog = false;
     },

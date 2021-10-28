@@ -30,7 +30,7 @@
         </v-card-title>
 
         <v-card-text>
-          <v-img :src="pictureInfo.location" max-height="600">
+          <v-img :src="pictureInfo.location" height="750" aspect-ratio="1.7778">
             
           </v-img>
         </v-card-text>
