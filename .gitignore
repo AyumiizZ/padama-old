@@ -24,6 +24,9 @@ pnpm-debug.log*
 
 config.js
 config.js.*
+*.config.js.*
+vue.config.js
+
 
 *.mp4
 back/src/public/*
