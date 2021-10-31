@@ -65,7 +65,14 @@
         Queries History
         <v-spacer></v-spacer>
         <router-link
-          :to="{ name: 'addCase', params: { _id: patientResults._id, firstname: patientResults.firstname, lastname: patientResults.lastname } }"
+          :to="{
+            name: 'addCase',
+            params: {
+              _id: patientResults._id,
+              firstname: patientResults.firstname,
+              lastname: patientResults.lastname,
+            },
+          }"
           ><v-btn>Add Case</v-btn>
         </router-link>
         <!-- <add-patient-data-dialog></add-patient-data-dialog> -->
@@ -80,7 +87,14 @@
           <tr>
             <td>{{ parseDate(row.item.visitDate) }}</td>
             <td>{{ row.item.id }}</td>
-            <td>{{ row.item.diagnosis }}</td>
+            <td>
+              <v-chip
+                v-for="item in parseDiag(row.item.diagnosis)"
+                :key="item.index"
+              >
+                {{ item }}
+              </v-chip>
+            </td>
             <td>{{ row.item.type }}</td>
             <td>{{ patientResults.age }}</td>
             <td>
@@ -151,8 +165,8 @@ import DatabaseService from "@/services/DatabaseService";
 // import AddPatientDataDialog from "../components/AddPatientDataDialog.vue";
 import PatientHeader from "../components/patientHeader.vue";
 export default {
-  name: 'patient',
-  components: {PatientHeader },
+  name: "patient",
+  components: { PatientHeader },
   // components: { VideoPlayer },
   data() {
     return {
@@ -223,24 +237,26 @@ export default {
     },
     parseDiag: function (diag) {
       var ret = [];
-      for (let i = 0; i < diag.length; i++) {
-        ret.push(this.diagnosisItems[diag[i]]);
+      var diagList = diag.split(",");
+      for (let i = 0; i < diagList.length; i++) {
+        if(this.diagnosisItems[diagList[i]] != undefined){
+        ret.push(this.diagnosisItems[diagList[i]]);}
       }
       return ret.sort();
     },
-    parseDate(date){
-      var dmy = date.split('T')[0]
-      var time = date.split('T')[1].split('.')[0]
-      
-      return dmy + ' ' + time
-    }
+    parseDate(date) {
+      var dmy = date.split("T")[0];
+      var time = date.split("T")[1].split(".")[0];
+
+      return dmy + " " + time;
+    },
   },
   async mounted() {
     this.queryResults = await DatabaseService.getCase({
       _id: this.$route.params._id,
     });
     // await DatabaseService.getPatient({_id: this.pid}).then(function(data) {
-    //         that.firstname = data[0].firstname 
+    //         that.firstname = data[0].firstname
     //         that.lastname = data[0].lastname
     //         that.sex = data[0].sex
     //         that.ud = data[0].ud
