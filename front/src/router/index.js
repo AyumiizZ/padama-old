@@ -111,11 +111,8 @@ const router = new VueRouter({
   routes,
 });
 
-var debugMode = true
+var debugMode = false
 router.beforeEach((to, from, next) => {
-  console.log(to)
-  console.log(from)
-  console.log(next)
   // next()
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // this route requires auth, check if logged in
