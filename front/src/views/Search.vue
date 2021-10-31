@@ -172,49 +172,8 @@
               <td>{{ row.item.patientID }}</td>
               <td>{{ row.item.firstname }}</td>
               <td>{{ row.item.lastname }}</td>
-              <td>{{ row.item.sex }}</td>
+              <td>{{ parseSex(row.item.sex) }}</td>
               <td>{{ calAge(row.item.birthDate) }}</td>
-              <td>{{ row.item.ud }}</td>
-              <td>{{ row.item.smoking }}</td>
-              <!-- <td>
-                <v-dialog v-model="row.item.dialog" width="500">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="primary" dark v-bind="attrs" v-on="on">
-                    More Info
-                  </v-btn>
-                </template>
-
-                <v-card>
-                  <v-card-title class="text-h5 grey lighten-2">
-                    Info
-                  </v-card-title>
-
-                  <v-card-text>
-                    <li>
-                      <strong>Underlying Disease: </strong>
-                      {{row.item.ud}}
-                    </li>
-                    <li>
-                      <strong>Smoking: </strong>
-                      {{ row.item.smoking }}
-                    </li>
-                  </v-card-text>
-
-                  <v-divider></v-divider>
-
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="primary"
-                      text
-                      @click="row.item.dialog = false"
-                    >
-                      I accept
-                    </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-              </td> -->
             </tr>
           </router-link>
         </template>
@@ -261,14 +220,6 @@ export default {
           text: "Age",
           value: "age",
         },
-        {
-          text: "Underlying Disease",
-          value: "ud",
-        },
-        {
-          text: "Smoking",
-          value: "smoking",
-        },
         // { text: "", align:"center", value: "attach" },
       ],
       queryResults: [],
@@ -308,6 +259,15 @@ export default {
         _id: this.RegistrationNo,
       });
     },
+    parseSex: function(sexShortForm) {
+      if(sexShortForm == 'm'){
+        return 'Male'
+      }
+      if(sexShortForm == 'f'){
+        return 'Female'
+      }
+      return 'Other'
+    }
   },
   async mounted() {
     // call backend to req data
