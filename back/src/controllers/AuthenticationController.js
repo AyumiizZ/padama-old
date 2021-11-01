@@ -12,6 +12,9 @@ function jwtSignUser(user) {
 module.exports = {
   async register(req, res) {
     try {
+      res.status(400).send({
+        error: "Temporary disabled",
+      });
       const user = await User.create(req.body);
       res.send(user.toJSON());
     } catch (err) {
