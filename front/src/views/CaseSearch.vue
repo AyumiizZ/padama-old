@@ -296,6 +296,9 @@ export default {
     },
     parseDiag: function (diag) {
       var ret = [];
+      if(diag === null){
+        diag = ""
+      }
       var diagList = diag.split(",");
       for (let i = 0; i < diagList.length; i++) {
         if(this.diagnosisItems[diagList[i]] != undefined){
@@ -311,6 +314,9 @@ export default {
       return ret.sort();
     },
     parseDate(date){
+      if (date === null){
+        return 'N/A'
+      }
       var dmy = date.split('T')[0]
       var time = date.split('T')[1].split('.')[0]
       
